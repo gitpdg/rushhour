@@ -15,7 +15,14 @@ public class State {
 
 		//initialized as parent
 		this.pos = parent.pos;
-		this.isOccupied = parent.isOccupied;
+		int size = parent.isOccupied.length;
+		boolean[][] t = new boolean[size][size];
+		for (int k = 0; k < size; k++){
+			for (int j = 0; j < size; k++) {
+				t[k][j] = parent.isOccupied[k][j];
+			}
+		}
+		this.isOccupied = t;
 
 		//the vehicle that is to move is deleted from isOccupied
 		for (int i=pos[m.id]; i<pos[m.id]+vehicles[m.id].length; i++) {
@@ -41,7 +48,8 @@ public class State {
 	public LinkedList<Move> possibleMoves(Vehicle[] vehicles, int size) {
 		LinkedList<Move> nextMoves = new LinkedList<Move>();
 		int distance;
-		for (int id=0; id < pos.length; id++) {
+		int n = pos.length;
+		for (int id=0; id < n; id++) {
 			if (vehicles[id].orientation=='h') {
 				//moving left
 				distance = -1;
@@ -49,7 +57,7 @@ public class State {
 					nextMoves.add(new Move(id, distance));
 				//moving right
 				distance = 1;
-				while (pos[id] + vehicles[id].length + distance < size && !isOccupied[vehicles[id].fixedPos][pos[id] + vehicles[id].length + distance])
+				while (pos[id] + vehicles[id].length - 1 + distance < size && !isOccupied[vehicles[id].fixedPos][pos[id] + vehicles[id].length + distance])
 					nextMoves.add(new Move(id, distance));
 			}
 			else {
@@ -59,7 +67,7 @@ public class State {
 					nextMoves.add(new Move(id, distance));
 				//moving down
 				distance = 1;
-				while (pos[id] + vehicles[id].length + distance < size && !isOccupied[pos[id] + vehicles[id].length + distance][vehicles[id].fixedPos])
+				while (pos[id] + vehicles[id].length - 1 + distance < size && !isOccupied[pos[id] + vehicles[id].length + distance][vehicles[id].fixedPos])
 					nextMoves.add(new Move(id, distance));
 			}  				
 		}
