@@ -74,8 +74,22 @@ public class State {
 		return (nextMoves);
 	}
 
+
+	public Move getLastMove(SeenStates T, int nbrVehicles, int size) {
+		//Attention à bien appeler cette méthode sur un état déja visité sinon ça va faire de la merde
+		int[] pos = this.pos;
+		SeenStates tree = T;
+		for (int i = 0; i < nbrVehicles-1; i++) {
+			SeenStates[] child = tree.children;
+			int x = pos[i];
+			tree = child[x];			
+		}
+		return tree.lastmove;
+	}
+	
+	
+	
 	/*
-	Move getLastMove(SeenStates T);
   	void print();
 	 */
 }

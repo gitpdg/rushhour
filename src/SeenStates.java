@@ -9,12 +9,10 @@ public class SeenStates {
 		this.children = null;
 	}
 	
-	public boolean add(State e, Move lastmove, Game g){
+	public boolean add(State e, Move lastmove, int nbrVehicles, int size){
 		int[] pos = e.pos;
 		SeenStates tree = this;
-		int nbrVehicules = g.nbrVehicles;
-		int size = g.size;
-		for (int i = 0; i < nbrVehicules-1; i++) {
+		for (int i = 0; i < nbrVehicles-1; i++) {
 			SeenStates[] child = tree.children;
 			if (child == null) {
 				child = new SeenStates[size];
