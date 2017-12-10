@@ -9,7 +9,7 @@ public class State {
 		this.pos = pos;
 		this.isOccupied = isOccupied;
 	}
-
+	
 	public State(State parent, Move m, Vehicle[] vehicles) {
 		//this constructor is used to create the state obtained when performing a move m on a state parent.
 
@@ -43,6 +43,25 @@ public class State {
 				isOccupied[i][vehicles[m.id].fixedPos] = true;
 		}
 
+	}
+	
+	
+	public boolean equal(State s2) {
+		int[] pos1 = this.pos;
+		int[] pos2 = s2.pos;
+		int n = pos1.length;
+		for (int i = 0; i < n; i++) {
+			if (pos1[i] != pos2[i]) {
+				return(false);
+			}
+		}
+		return(true);
+	}
+	
+	public void Previous(Move m){
+		//Récupère l'état d'avant en ne changeant que pos, à utiliser que pour remonter à la fin !
+		int id = m.id;
+		this.pos[id] = this.pos[id] - m.distance;
 	}
 
 	public LinkedList<Move> possibleMoves(Vehicle[] vehicles, int size) {
