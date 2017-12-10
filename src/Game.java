@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.*;
 
 public class Game {
 	
@@ -73,12 +74,49 @@ public class Game {
 			}
 			
 		}
-		
 		br.close();
+		
 		this.size = size;
 		this.nbrVehicles = nbrVehicles;
 		this.vehicles = pos;
 		this.initialState = new State(posInit, t);
+	}
+	
+	
+	public LinkedList<Move> solve() {
+		LinkedList<Move> res = new LinkedList<Move>();
+		Queue<State> q = new ArrayDeque<State>();
+		SeenStates seen = new SeenStates();
+		State s = this.initialState;
+		q.add(s);
+		boolean solved = false;
+		while ((!q.isEmpty()) && !solved) {
+			s = q.remove();
+			int posFirstVehicle = s.pos[0];
+			int lengthFirstVehicle = (this.vehicles[0]).length;
+			if (posFirstVehicle + lengthFirstVehicle - 1 == this.size - 1) {
+				solved = true;
+			}
+			else {
+				LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
+				for (Move m : moves){
+					State s2 = new State(s, m, this.vehicles);
+					if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+						q.add(s2);
+					}
+				}
+			}
+		}
+		
+		Move lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
+		s.Previous(lastmove);
+		res.add(lastmove);
+		while (!s.equal(this.initialState)){
+			lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
+			s.Previous(lastmove);
+			res.add(lastmove);
+		}
+		return res;
 	}
 
 	
