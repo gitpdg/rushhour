@@ -1,13 +1,11 @@
 public class State{
-	int size;
-	int nbr_vehicles;
 	int[] pos;
 	boolean[][] is_occupied;
 	
-	public State(int size, int nbr_vehicles, int[] pos) {
-		this.size=size;
-		this.nbr_vehicles=nbr_vehicles;
+	public State(int[] pos, boolean[][] is_occupied) {
 		this.pos = pos;
-		
+		this.is_occupied = is_occupied;
 	}
+	
+	
 }
