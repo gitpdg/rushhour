@@ -12,5 +12,11 @@ public class Vehicle {
 		this.orientation = orientation;
 		this.fixedPos = fixedPos;
 	}
+	
+	@Override
+	public String toString(){
+		String c = Integer.toString(id) + "/" + Integer.toString(length) + "/" + orientation + "/" + Integer.toString(fixedPos);
+		return(c);
+	}
 
 }

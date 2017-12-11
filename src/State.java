@@ -14,33 +14,38 @@ public class State {
 		//this constructor is used to create the state obtained when performing a move m on a state parent.
 
 		//initialized as parent
-		this.pos = parent.pos;
-		int size = parent.isOccupied.length;
+		int nbrVehicles = parent.pos.length;
+		this.pos = new int[nbrVehicles];
+		for (int k = 0; k < nbrVehicles; k++){
+			this.pos[k] = parent.pos[k];
+		}
+		int size = (parent.isOccupied).length;
 		boolean[][] t = new boolean[size][size];
 		for (int k = 0; k < size; k++){
-			for (int j = 0; j < size; k++) {
+			for (int j = 0; j < size; j++) {
 				t[k][j] = parent.isOccupied[k][j];
 			}
 		}
 		this.isOccupied = t;
 
 		//the vehicle that is to move is deleted from isOccupied
-		for (int i=pos[m.id]; i<pos[m.id]+vehicles[m.id].length; i++) {
-			if (vehicles[m.id].orientation=='h')
-				isOccupied[vehicles[m.id].fixedPos][i] = false;
+		for (int i=pos[m.id - 1]; i<=pos[m.id - 1]+vehicles[m.id - 1].length - 1; i++) {
+			if (vehicles[m.id - 1].orientation=='h')
+				isOccupied[i - 1][vehicles[m.id-1].fixedPos - 1] = false;
 			else
-				isOccupied[i][vehicles[m.id].fixedPos] = false;
+				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = false;
 		}
 
 		//the vehicle is moved
-		pos[m.id] += m.distance;
+		pos[m.id-1] += m.distance;
 
 		//the vehicle that was moved is put back in isOccupied
-		for (int i=pos[m.id]; i<pos[m.id]+vehicles[m.id].length; i++) {
-			if (vehicles[m.id].orientation=='h')
-				isOccupied[vehicles[m.id].fixedPos][i] = true;
+		for (int i=pos[m.id-1]; i<=pos[m.id-1]+vehicles[m.id-1].length - 1; i++) {
+			if (vehicles[m.id-1].orientation=='h'){
+				isOccupied[i-1][vehicles[m.id-1].fixedPos-1] = true;
+			}
 			else
-				isOccupied[i][vehicles[m.id].fixedPos] = true;
+				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = true;
 		}
 
 	}
@@ -58,9 +63,31 @@ public class State {
 		return(true);
 	}
 	
+	public String toString(){
+		String c = "";
+		for (int i = 0; i < pos.length; i++){
+			c = c + Integer.toString(pos[i]) + "/";
+		}
+		
+		/*String d = "";
+		for (int j = 0; j < isOccupied.length; j ++){
+			for (int i = 0; i < isOccupied.length; i++){
+				if (isOccupied[i][j]) {
+					d += "1";
+				}
+				else {
+					d += "0";
+				}
+			}
+			d += "\n";
+		}
+		return(c + "\n" + d);*/
+		return(c);
+	}
+	
 	public void Previous(Move m){
 		//Récupère l'état d'avant en ne changeant que pos, à utiliser que pour remonter à la fin !
-		int id = m.id;
+		int id = m.id-1;
 		this.pos[id] = this.pos[id] - m.distance;
 	}
 
@@ -72,22 +99,31 @@ public class State {
 			if (vehicles[id].orientation=='h') {
 				//moving left
 				distance = -1;
-				while (pos[id] + distance >0 && !isOccupied[vehicles[id].fixedPos][pos[id] + distance])
-					nextMoves.add(new Move(id, distance));
+				while (pos[id] - 1 + distance >= 0 && !isOccupied[pos[id] - 1 + distance][vehicles[id].fixedPos - 1]) {
+					nextMoves.add(new Move(id+1, distance));
+					distance -= 1;
+				}
 				//moving right
 				distance = 1;
-				while (pos[id] + vehicles[id].length - 1 + distance < size && !isOccupied[vehicles[id].fixedPos][pos[id] + vehicles[id].length + distance])
-					nextMoves.add(new Move(id, distance));
+				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && !isOccupied[pos[id] - 1 + vehicles[id].length - 1 + distance][vehicles[id].fixedPos - 1]) {
+					nextMoves.add(new Move(id+1, distance));
+					distance += 1;
+				}
+					
 			}
 			else {
 				//moving up
 				distance = -1;
-				while (pos[id] + distance >0 && !isOccupied[pos[id] + distance][vehicles[id].fixedPos])
-					nextMoves.add(new Move(id, distance));
+				while (pos[id] - 1 + distance >= 0 && !isOccupied[vehicles[id].fixedPos - 1][pos[id] - 1 + distance]) {
+					nextMoves.add(new Move(id+1, distance));
+					distance -= 1;
+				}
 				//moving down
 				distance = 1;
-				while (pos[id] + vehicles[id].length - 1 + distance < size && !isOccupied[pos[id] + vehicles[id].length + distance][vehicles[id].fixedPos])
-					nextMoves.add(new Move(id, distance));
+				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && !isOccupied[vehicles[id].fixedPos - 1][pos[id] + vehicles[id].length - 1 + distance - 1]){
+					nextMoves.add(new Move(id+1, distance));
+					distance += 1;
+				}
 			}  				
 		}
 		return (nextMoves);
@@ -96,17 +132,16 @@ public class State {
 
 	public Move getLastMove(SeenStates T, int nbrVehicles, int size) {
 		//Attention à bien appeler cette méthode sur un état déja visité sinon ça va faire de la merde
+		
 		int[] pos = this.pos;
 		SeenStates tree = T;
-		for (int i = 0; i < nbrVehicles-1; i++) {
+		for (int i = 0; i < nbrVehicles; i++) {
 			SeenStates[] child = tree.children;
 			int x = pos[i];
-			tree = child[x];			
+			tree = child[x-1];
 		}
 		return tree.lastmove;
 	}
-	
-	
 	
 	/*
   	void print();

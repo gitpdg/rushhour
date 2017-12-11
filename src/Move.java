@@ -8,4 +8,8 @@ public class Move {
 		this.id = id;
 		this.distance = distance;
 	}
+	
+	public String toString(){
+		return(Integer.toString(id) + "/" + Integer.toString(distance));
+	}
 }

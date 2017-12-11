@@ -9,12 +9,11 @@ public class Game {
 	State initialState;
 	
 
-	public Game(String file_name) throws FileNotFoundException, IOException {
-		File etat = new File(file_name);		
-		BufferedReader br = new BufferedReader(new FileReader(etat));
+	public Game(String file_name) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(file_name));
 		String line;
-		int size = br.read();
-		int nbrVehicles = br.read();
+		int size = Integer.valueOf(br.readLine());
+		int nbrVehicles = Integer.valueOf(br.readLine());
 		String[] line_split;
 		Vehicle[] pos = new Vehicle[nbrVehicles];
 		int[] posInit = new int[nbrVehicles];
@@ -89,12 +88,13 @@ public class Game {
 		SeenStates seen = new SeenStates();
 		State s = this.initialState;
 		q.add(s);
+		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
 		while ((!q.isEmpty()) && !solved) {
 			s = q.remove();
 			int posFirstVehicle = s.pos[0];
 			int lengthFirstVehicle = (this.vehicles[0]).length;
-			if (posFirstVehicle + lengthFirstVehicle - 1 == this.size - 1) {
+			if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
 				solved = true;
 			}
 			else {
@@ -105,6 +105,7 @@ public class Game {
 						q.add(s2);
 					}
 				}
+				System.out.println();
 			}
 		}
 		

@@ -12,7 +12,7 @@ public class SeenStates {
 	public boolean add(State e, Move lastmove, int nbrVehicles, int size){
 		int[] pos = e.pos;
 		SeenStates tree = this;
-		for (int i = 0; i < nbrVehicles-1; i++) {
+		for (int i = 0; i < nbrVehicles; i++) {
 			SeenStates[] child = tree.children;
 			if (child == null) {
 				child = new SeenStates[size];
@@ -20,9 +20,8 @@ public class SeenStates {
 					child[j] = new SeenStates();
 				}
 				tree.children = child;
-			}
-			int x = pos[i];
-			tree = child[x];			
+			}	
+			tree = child[pos[i]-1];			
 		}
 		if (tree.lastmove == null) {
 			tree.lastmove = lastmove;
@@ -31,5 +30,32 @@ public class SeenStates {
 		else {
 			return(true);
 		}
+	}
+	
+	public String toString(){
+		String c = "";
+		if (this.lastmove == null){
+			c += "null";
+		}
+		else {
+			c += lastmove.toString();
+		}
+		c += ": \n";
+		SeenStates[] child = this.children;
+		if (child == null) {
+			c += "fin";
+		}
+		else {
+			for (int i = 0; i < child.length; i++) {
+				if (child[i] == null) {
+					c += "null /";
+				}
+				else {
+					c += child[i].toString();
+					c += "/";
+				}
+			}
+		}
+		return(c);
 	}
 }
