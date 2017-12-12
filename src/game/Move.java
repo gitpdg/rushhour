@@ -2,8 +2,8 @@ package game;
 
 public class Move {
 	
-	int id;
-	int distance;
+	public int id;
+	public int distance;
 	
 	public Move(int id, int distance) {
 		this.id = id;

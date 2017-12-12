@@ -118,7 +118,13 @@ public class Game {
 			s.Previous(lastmove);
 			res.add(lastmove);
 		}
-		return res;
+		
+		LinkedList<Move> resInv = new LinkedList<Move>();
+		Iterator<Move> ite = res.descendingIterator();
+		while (ite.hasNext()) {
+			resInv.add(ite.next());
+		}
+		return resInv;
 	}
 
 	
