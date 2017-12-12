@@ -1,10 +1,11 @@
+package game;
 import java.io.*;
 import java.util.*;
 
 public class Game {
 	
-	int size;
-	int nbrVehicles;
+	public int size;
+	public int nbrVehicles;
 	Vehicle[] vehicles;
 	State initialState;
 	
