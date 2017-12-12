@@ -6,8 +6,8 @@ public class Game {
 	
 	public int size;
 	public int nbrVehicles;
-	Vehicle[] vehicles;
-	State initialState;
+	public Vehicle[] vehicles;
+	public State initialState;
 	
 
 	public Game(String file_name) throws IOException {

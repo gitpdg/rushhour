@@ -2,7 +2,7 @@ package GraphicGame;
 
 import javax.swing.*;
 import java.awt.*;
-import game.Game;
+import game.*;
 
 import java.io.*;
 
@@ -21,7 +21,11 @@ public class Window extends JFrame{
 		//Pannel pan = new Pannel();
 		//pan.paintBackGround(g);
 		//pan.Grille(getGraphics(), game.size);
-		setContentPane(new Pannel());
+		int size = game.size;
+		int nbrVehicles = game.nbrVehicles;
+		Vehicle[] vehicles = game.vehicles;
+		int[] pos = (game.initialState).pos;
+		setContentPane(new Pannel(size, nbrVehicles, vehicles, pos));
 		
 		setVisible(true);
 	}

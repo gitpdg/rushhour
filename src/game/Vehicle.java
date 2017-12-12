@@ -2,10 +2,10 @@ package game;
 
 public class Vehicle {
 
-	int id;
-	int length;
-	char orientation;
-	int fixedPos;
+	public int id;
+	public int length;
+	public char orientation;
+	public int fixedPos;
 	
 	public Vehicle(int id, int length, char orientation, int fixedPos) {
 		this.id = id;

@@ -2,7 +2,7 @@ package game;
 import java.util.LinkedList;
 
 public class State {
-	int[] pos;
+	public int[] pos;
 	boolean[][] isOccupied;
 
 
