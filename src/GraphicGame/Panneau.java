@@ -29,7 +29,6 @@ public class Panneau extends JPanel {
 	
 	public void paintComponent(Graphics g){
 		if (this.move == null) {
-			System.out.println("coucou");
 			paintBackGround(g);
 			Grille(g);
 			this.colors = paintVehicles(g);
@@ -41,6 +40,12 @@ public class Panneau extends JPanel {
 		}
 	}
 	
+	public void init(int[] positions){
+		this.setpos(positions);
+		this.move = null;
+		this.colors = null;
+		this.distancefaite = 0;
+	}
 	public void setMove(Move m){
 		this.move = m;
 	}
@@ -55,6 +60,11 @@ public class Panneau extends JPanel {
 	public void setpos(int i, int x){
 		this.pos[i] = x;
 	}
+	public void setpos(int[] positions){
+		for (int i = 0; i < pos.length; i++){
+			this.pos[i] = positions[i];
+		}
+	}
 	
 	public void paintBackGround(Graphics g){
 		g.setColor(Color.LIGHT_GRAY);
@@ -65,16 +75,33 @@ public class Panneau extends JPanel {
 	
 	public void Grille(Graphics g){
 		g.setColor(Color.black);
-		int x1 = this.getWidth();
-		int y1 = this.getHeight();
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < this.size + 1; i++){
-			g.drawLine(x, 0, x, y1);
-			g.drawLine(0, y, x1, y);
+		int width = this.getWidth();
+		int height = this.getHeight();
+		int x1 = 98*width/100;
+		int y1 = 98*height/100;
+		int y2 = 0;
+		int x0 = height/100;
+		int y0 = width/100;
+		int car1 = vehicles[0].fixedPos;
+		g.fillRect(0, 0, width, height/100);
+		g.fillRect(0, 0, width/100, height);
+		int x = x0 + x1/size;
+		int y = y0 + y1/size;
+		for (int i = 1; i < this.size; i++){
+			g.drawLine(x, 0, x, height);
+			g.drawLine(0, y, width, y);
+			if (i == car1 - 1) {
+				y2 = y;
+			}
 			x += x1 / size;
 			y += y1 / size;
 		}
+		g.fillRect(0, height - x0, width, x0);
+		g.fillRect(width - y0, 0, y0, y2);
+		y2 += y1/size;
+		g.fillRect(width-y0, y2, y0, height-y2);
+		
+		
 	}
 	
 	public Color randomColor(Random rand){
@@ -87,23 +114,27 @@ public class Panneau extends JPanel {
 	
 	public void paintVehicle(Graphics g, Color c, Vehicle v, int position, boolean movement){
 		g.setColor(c);
-		int x1 = this.getWidth();
-		int y1 = this.getHeight();
+		int w = this.getWidth();
+		int h = this.getHeight();
+		int x1 = 98*w/100;
+		int y1 = 98*h/100;
+		int x0 = h/100;
+		int y0 = w/100;
 		float x2 = ((float) x1)/ this.size;
 		float y2 = ((float) y1)/ this.size;
 		if (v.orientation == 'h') {
-			int x = (int) ((position - 1)*x2 + 1f/10f*x2);
+			int x = x0 + (int) ((position - 1)*x2 + 1f/10f*x2);
 			if (movement) {
 				x += distancefaite;
 			}
-			int y = (int) ((v.fixedPos-1)*y2 + 1f/20f*y2) ;
+			int y = y0 + (int) ((v.fixedPos-1)*y2 + 1f/20f*y2) ;
 			int width = (int) (v.length*x2 - 2f/10f*x2);
 			int height = (int) ((18f/20f)*y2);
 			g.fillRoundRect(x, y, width, height, 20, 20);
 		}
 		else {
-			int x = (int) ((v.fixedPos - 1)*x2 + 1f/20f*x2);
-			int y = (int) ((position-1)*y2 + 1f/10f*y2 ) ;
+			int x = x0 + (int) ((v.fixedPos - 1)*x2 + 1f/20f*x2);
+			int y = y0 + (int) ((position-1)*y2 + 1f/10f*y2 ) ;
 			if (movement) {
 				y += distancefaite;
 			}

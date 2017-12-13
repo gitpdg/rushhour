@@ -19,7 +19,15 @@ public class Bouton extends JButton implements MouseListener {
 		g.setColor(c);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		g.setColor(Color.black);
-		g.drawString(this.name, this.getWidth()/2 - (this.getWidth()/4), (this.getHeight()/2) + 5);
+		FontMetrics fm = g.getFontMetrics();
+		int x = (getWidth()-fm.stringWidth(name))/2;
+		int y = (getHeight()-fm.getHeight())/2 + fm.getAscent();
+		//g.drawString(this.name, this.getWidth()/2 - (this.getWidth()/4), (this.getHeight()/2) + 5);
+		g.drawString(this.name, x, y);
+	}
+	
+	public void setName(String n){
+		this.name = n;
 	}
 	
 	//Méthode appelée lors du clic de souris

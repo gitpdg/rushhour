@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -15,20 +16,22 @@ import game.Game;
 import game.Move;
 import game.Vehicle;
 
-public class Window extends JFrame{
+public class Window extends JFrame {
+	String file_name;
 	Game game;
 	JFrame window;
 	LinkedList<Move> solution;
 	private Panneau pan;
 	private JPanel container = new JPanel();
-	private Bouton boutonSolution = new Bouton("Solution");
 	private Bouton boutonSolve = new Bouton("Solve");
+	private Bouton boutonInit = new Bouton("Init");
 	private Thread t;
 	
 	public Window(String file_name) throws IOException{
 		super("Game");
 		this.game = new Game(file_name);
 		this.solution = null;
+		this.file_name = file_name;
 		
 		setSize(750,750);
 		setLocationRelativeTo(null);
@@ -47,40 +50,47 @@ public class Window extends JFrame{
 		//GridLayout g = new GridLayout(1, 2, 5, 5);
 		FlowLayout g = new FlowLayout();
 		b.setLayout(g);
-		b.add(boutonSolution);
 		b.add(boutonSolve);
+		b.add(boutonInit);
+		boutonInit.setEnabled(false);
+
 		container.add(pan, BorderLayout.CENTER);
 		container.add(b, BorderLayout.SOUTH);
+		
 		this.setContentPane(container);
 		
-		boutonSolution.addActionListener(new BoutonSolutionListener());
-		boutonSolution.setEnabled(false);
-		
 		boutonSolve.addActionListener(new BoutonSolveListener());
+		boutonInit.addActionListener(new BoutonInitListener());
 		
 		setVisible(true);
 	}
 	
-	public void movement(Move m){
+	public void movement(Move m, boolean last){
 		pan.setMove(m);
 		int distance = m.distance;
 		if (distance >= 0) {
+			if (last){
+				distance += game.vehicles[m.id-1].length;
+			}
 			for (int d = 0; d < distance*(pan.getWidth()) / game.size; d++) {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
-			        Thread.sleep(5);
+			        Thread.sleep(3);
 			      } catch (InterruptedException e) {
 			        e.printStackTrace();
 			      }
 			}
 		}
 		else {
+			if (last){
+				distance -= game.vehicles[m.id-1].length;
+			}
 			for (int d = 0; d > distance*(pan.getWidth()) / game.size; d--) {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
-			        Thread.sleep(5);
+			        Thread.sleep(3);
 			      } catch (InterruptedException e) {
 			        e.printStackTrace();
 			      }
@@ -93,19 +103,39 @@ public class Window extends JFrame{
 	class BoutonSolveListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent arg0) {
-			LinkedList<Move> sol = game.solve();
-			solution = sol;
-			boutonSolution.setEnabled(true);
-			boutonSolve.setEnabled(false);
+			if (solution == null){
+				LinkedList<Move> sol = game.solve();
+				solution = sol;
+				boutonSolve.setName("Solution");
+			}
+			else {
+				t = new Thread(new PlayAnimation());
+				t.start();
+				boutonSolve.setEnabled(false);
+				boutonInit.setEnabled(true);
+			}
+			
 		}
 	}
 	
-	class BoutonSolutionListener implements ActionListener{
+	class BoutonInitListener implements ActionListener  {
 		
 		public void actionPerformed(ActionEvent arg0) {
-			t = new Thread(new PlayAnimation());
-			t.start();
-			boutonSolution.setEnabled(false);
+
+			solution = null;
+			boutonSolve.setName("Solve");
+			boutonSolve.setEnabled(true);
+			boutonInit.setEnabled(false);
+			
+			try {
+				game = new Game(file_name);
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}
+			int[] pos = (game.initialState).pos;
+			pan.init(pos);
+			repaint();
 		}
 	}
 	
@@ -114,30 +144,18 @@ public class Window extends JFrame{
 		public void run(){
 			while (!solution.isEmpty()){
 				Move m = solution.remove();
-				movement(m);
+				if (solution.isEmpty()){
+					movement(m, true);
+				}
+				else {
+				movement(m, false);
+				}
 			}
 		}
 	}
 	
-	
 	public static void main(String[] args) throws IOException{
 		Window gui = new Window("file.txt");
 		gui.setVisible(true);
-		/*LinkedList<Move> sol = gui.game.solve();
-		gui.solution = sol;
-		while (!gui.solution.isEmpty()){
-			Move m = gui.solution.remove();
-			gui.movement(m);
-		}*/
-		/*LinkedList<Move> sol = (gui.game).solve();
-		try {
-	        Thread.sleep(1000);
-	      } catch (InterruptedException e) {
-	        e.printStackTrace();
-	      }
-		while (!sol.isEmpty()){
-			Move m = sol.remove();
-			gui.movement(m);
-		}*/
 	}
 }
