@@ -29,21 +29,17 @@ public class GameWindow extends JFrame {
 	String path = "Games/";
 	
 	public GameWindow(String file_name, String windowName) throws IOException{
-		window = new JFrame(windowName);
+		super(windowName);
 		this.game = new Game(path + file_name);
 		this.solution = null;
 		this.file_name = file_name;
 		this.reset = false;
 		
-		window.setSize(750,750);
-		window.setLocationRelativeTo(null);
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(750,750);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		container.setBackground(Color.white);
 		container.setLayout(new BorderLayout());
-		
-		/*setSize(750,750);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
 		
 		int size = game.size;
 		int nbrVehicles = game.nbrVehicles;
@@ -52,7 +48,6 @@ public class GameWindow extends JFrame {
 		this.pan = new GamePanel(size, nbrVehicles, vehicles, pos);
 		
 		JPanel b = new JPanel();
-		//GridLayout g = new GridLayout(1, 2, 5, 5);
 		FlowLayout g = new FlowLayout();
 		b.setLayout(g);
 		b.add(bouton);
@@ -61,14 +56,12 @@ public class GameWindow extends JFrame {
 		container.add(pan, BorderLayout.CENTER);
 		container.add(b, BorderLayout.SOUTH);
 		
-		window.setContentPane(container);
-		//setContentPane(container);
+		setContentPane(container);
 		
 		bouton.addActionListener(new BoutonSolveListener());
 		newGame.addActionListener(new NewGameListener());
 		
-		window.setVisible(true);
-		//setVisible(true);
+		setVisible(true);
 	}
 	
 	public void movement(Move m, boolean last){
@@ -121,7 +114,7 @@ public class GameWindow extends JFrame {
 				}
 				int[] pos = (game.initialState).pos;
 				pan.init(pos);
-				window.setContentPane(container);
+				setContentPane(container);
 			}
 			else {
 				if (solution == null){
@@ -146,7 +139,7 @@ public class GameWindow extends JFrame {
 			try {
 				LoadingWindow gui = new LoadingWindow();
 				gui.setVisible(true);
-				window.setVisible(false);
+				setVisible(false);
 			 }
 			catch (IOException e){
 				e.printStackTrace();

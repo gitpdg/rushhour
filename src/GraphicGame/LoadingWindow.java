@@ -18,16 +18,16 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class LoadingWindow extends JFrame {
-	JFrame window;
 	JPanel container = new JPanel();
 	Bouton start;
 	JComboBox<String> choices = new JComboBox<String>();
 	
 	public LoadingWindow() throws IOException{
-		window = new JFrame("Start new game");
-		window.setSize(250,110);
-		window.setLocationRelativeTo(null);
-		window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		super("Start new game");
+		setSize(250,110);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		
 		container.setBackground(Color.white);
 		container.setLayout(new BorderLayout());
 		
@@ -58,11 +58,11 @@ public class LoadingWindow extends JFrame {
 		label.setHorizontalAlignment(JLabel.CENTER);
 		container.add(label, BorderLayout.NORTH);
 		
-		window.setContentPane(container);
+		setContentPane(container);
 		
 		start.addActionListener(new StartButtonListener());
 		
-		window.setVisible(true);
+		setVisible(true);
 	}
 	
 	public class ItemState implements ItemListener{
@@ -84,7 +84,7 @@ public class LoadingWindow extends JFrame {
 			try {
 				GameWindow gui = new GameWindow(file, str);
 				gui.setVisible(true);
-				window.setVisible(false);
+				setVisible(false);
 			}
 			catch (IOException e){
 				e.printStackTrace();
