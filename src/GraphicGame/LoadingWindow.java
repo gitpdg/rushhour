@@ -1,16 +1,20 @@
 package GraphicGame;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class LoadingWindow extends JFrame {
@@ -20,36 +24,54 @@ public class LoadingWindow extends JFrame {
 	JComboBox<String> choices = new JComboBox<String>();
 	
 	public LoadingWindow() throws IOException{
-		super("Start new game");
-		setSize(200,100);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window = new JFrame("Start new game");
+		window.setSize(250,110);
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		container.setBackground(Color.white);
-		container.setLayout(new FlowLayout());
+		container.setLayout(new BorderLayout());
 		
+		JPanel pan = new JPanel();
+		pan.setLayout(new FlowLayout());
 		choices.setPreferredSize(new Dimension(100, 23));
+		File folder = new File("Games/");
+		String[] list = folder.list(new FileNameFilter());
 		choices.addItem("...");
-		choices.addItem("Game01");
+		for (int i = 0; i < list.length; i++){
+			int l = list[i].length();
+			choices.addItem(list[i].substring(0, l-4));
+		}
 		choices.addItemListener(new ItemState());
-		container.add(choices);
+		pan.add(choices);
 		
 		start = new Bouton("Start");
 		JPanel b = new JPanel();
 		start.setEnabled(false);
 		b.add(start);
-		container.add(b);
+		pan.add(b);
+		container.add(pan, BorderLayout.SOUTH);
 		
-		this.setContentPane(container);
+		JLabel label = new JLabel("Choose your game !");
+		label.setForeground(Color.BLUE);
+		Font police = new Font("Tahoma", Font.BOLD, 16);
+		label.setFont(police);
+		label.setHorizontalAlignment(JLabel.CENTER);
+		container.add(label, BorderLayout.NORTH);
+		
+		window.setContentPane(container);
 		
 		start.addActionListener(new StartButtonListener());
 		
-		setVisible(true);
+		window.setVisible(true);
 	}
 	
 	public class ItemState implements ItemListener{
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getItem() != "...") {
 				start.setEnabled(true);
+			}
+			else {
+				start.setEnabled(false);
 			}
 		}
 	}
@@ -62,6 +84,7 @@ public class LoadingWindow extends JFrame {
 			try {
 				GameWindow gui = new GameWindow(file, str);
 				gui.setVisible(true);
+				window.setVisible(false);
 			}
 			catch (IOException e){
 				e.printStackTrace();

@@ -1,5 +1,6 @@
 import java.io.IOException;
 
+import GraphicGame.FileNameFilter;
 import GraphicGame.LoadingWindow;
 
 public class Main {

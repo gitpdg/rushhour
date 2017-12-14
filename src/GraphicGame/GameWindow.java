@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -24,43 +23,52 @@ public class GameWindow extends JFrame {
 	private GamePanel pan;
 	private JPanel container = new JPanel();
 	private Bouton bouton = new Bouton("Solve");
+	private Bouton newGame = new Bouton("New Game");
 	boolean reset;
 	private Thread t;
+	String path = "Games/";
 	
 	public GameWindow(String file_name, String windowName) throws IOException{
-		super(windowName);
-		this.game = new Game(file_name);
+		window = new JFrame(windowName);
+		this.game = new Game(path + file_name);
 		this.solution = null;
 		this.file_name = file_name;
 		this.reset = false;
 		
-		setSize(750,750);
-		setLocationRelativeTo(null);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(750,750);
+		window.setLocationRelativeTo(null);
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		container.setBackground(Color.white);
 		container.setLayout(new BorderLayout());
+		
+		/*setSize(750,750);
+		setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);*/
 		
 		int size = game.size;
 		int nbrVehicles = game.nbrVehicles;
 		Vehicle[] vehicles = game.vehicles;
 		int[] pos = (game.initialState).pos;
 		this.pan = new GamePanel(size, nbrVehicles, vehicles, pos);
-		setContentPane(pan);
 		
 		JPanel b = new JPanel();
 		//GridLayout g = new GridLayout(1, 2, 5, 5);
 		FlowLayout g = new FlowLayout();
 		b.setLayout(g);
 		b.add(bouton);
+		b.add(newGame);
 
 		container.add(pan, BorderLayout.CENTER);
 		container.add(b, BorderLayout.SOUTH);
 		
-		this.setContentPane(container);
+		window.setContentPane(container);
+		//setContentPane(container);
 		
 		bouton.addActionListener(new BoutonSolveListener());
+		newGame.addActionListener(new NewGameListener());
 		
-		setVisible(true);
+		window.setVisible(true);
+		//setVisible(true);
 	}
 	
 	public void movement(Move m, boolean last){
@@ -106,14 +114,14 @@ public class GameWindow extends JFrame {
 				bouton.setName("Solve");
 				
 				try {
-					game = new Game(file_name);
+					game = new Game(path + file_name);
 				}
 				catch (IOException e){
 					e.printStackTrace();
 				}
 				int[] pos = (game.initialState).pos;
 				pan.init(pos);
-				repaint();
+				window.setContentPane(container);
 			}
 			else {
 				if (solution == null){
@@ -130,6 +138,21 @@ public class GameWindow extends JFrame {
 			}
 			
 		}
+	}
+	
+	class NewGameListener implements ActionListener{
+		 public void actionPerformed(ActionEvent arg0){
+			
+			try {
+				LoadingWindow gui = new LoadingWindow();
+				gui.setVisible(true);
+				window.setVisible(false);
+			 }
+			catch (IOException e){
+				e.printStackTrace();
+			}
+			
+		 }
 	}
 	
 	class PlayAnimation implements Runnable{
