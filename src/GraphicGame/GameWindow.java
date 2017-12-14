@@ -146,9 +146,4 @@ public class GameWindow extends JFrame {
 			}
 		}
 	}
-	
-	public static void main(String[] args) throws IOException{
-		GameWindow gui = new GameWindow("file.txt", "game01");
-		gui.setVisible(true);
-	}
 }

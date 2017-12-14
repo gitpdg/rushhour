@@ -69,8 +69,4 @@ public class LoadingWindow extends JFrame {
 		}
 	}
 	
-	public static void main(String[] args) throws IOException{
-		LoadingWindow gui = new LoadingWindow();
-		gui.setVisible(true);
-	}
 }
