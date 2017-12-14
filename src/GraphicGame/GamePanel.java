@@ -5,7 +5,7 @@ import java.awt.*;
 import game.*;
 import java.util.Random;
 
-public class Panneau extends JPanel {
+public class GamePanel extends JPanel {
 	
 	JPanel pan;
 	int size;
@@ -16,7 +16,7 @@ public class Panneau extends JPanel {
 	int distancefaite;
 	Color[] colors = null;
 	
-	public Panneau(int size, int nbrVehicles, Vehicle[] vehicles, int[] pos){
+	public GamePanel(int size, int nbrVehicles, Vehicle[] vehicles, int[] pos){
 		super();
 		this.size = size;
 		this.nbrVehicles = nbrVehicles;

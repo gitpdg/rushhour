@@ -30,6 +30,10 @@ public class Bouton extends JButton implements MouseListener {
 		this.name = n;
 	}
 	
+	public String getName(){
+		return(this.name);
+	}
+	
 	//Méthode appelée lors du clic de souris
 	  public void mouseClicked(MouseEvent event) { }
 

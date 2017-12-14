@@ -16,19 +16,19 @@ import game.Game;
 import game.Move;
 import game.Vehicle;
 
-public class Window extends JFrame {
+public class GameWindow extends JFrame {
 	String file_name;
 	Game game;
 	JFrame window;
 	LinkedList<Move> solution;
-	private Panneau pan;
+	private GamePanel pan;
 	private JPanel container = new JPanel();
 	private Bouton bouton = new Bouton("Solve");
 	boolean reset;
 	private Thread t;
 	
-	public Window(String file_name) throws IOException{
-		super("Game");
+	public GameWindow(String file_name, String windowName) throws IOException{
+		super(windowName);
 		this.game = new Game(file_name);
 		this.solution = null;
 		this.file_name = file_name;
@@ -44,7 +44,7 @@ public class Window extends JFrame {
 		int nbrVehicles = game.nbrVehicles;
 		Vehicle[] vehicles = game.vehicles;
 		int[] pos = (game.initialState).pos;
-		this.pan = new Panneau(size, nbrVehicles, vehicles, pos);
+		this.pan = new GamePanel(size, nbrVehicles, vehicles, pos);
 		setContentPane(pan);
 		
 		JPanel b = new JPanel();
@@ -148,7 +148,7 @@ public class Window extends JFrame {
 	}
 	
 	public static void main(String[] args) throws IOException{
-		Window gui = new Window("file.txt");
+		GameWindow gui = new GameWindow("file.txt", "game01");
 		gui.setVisible(true);
 	}
 }
