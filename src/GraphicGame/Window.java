@@ -23,8 +23,8 @@ public class Window extends JFrame {
 	LinkedList<Move> solution;
 	private Panneau pan;
 	private JPanel container = new JPanel();
-	private Bouton boutonSolve = new Bouton("Solve");
-	private Bouton boutonInit = new Bouton("Init");
+	private Bouton bouton = new Bouton("Solve");
+	boolean reset;
 	private Thread t;
 	
 	public Window(String file_name) throws IOException{
@@ -32,6 +32,7 @@ public class Window extends JFrame {
 		this.game = new Game(file_name);
 		this.solution = null;
 		this.file_name = file_name;
+		this.reset = false;
 		
 		setSize(750,750);
 		setLocationRelativeTo(null);
@@ -50,17 +51,14 @@ public class Window extends JFrame {
 		//GridLayout g = new GridLayout(1, 2, 5, 5);
 		FlowLayout g = new FlowLayout();
 		b.setLayout(g);
-		b.add(boutonSolve);
-		b.add(boutonInit);
-		boutonInit.setEnabled(false);
+		b.add(bouton);
 
 		container.add(pan, BorderLayout.CENTER);
 		container.add(b, BorderLayout.SOUTH);
 		
 		this.setContentPane(container);
 		
-		boutonSolve.addActionListener(new BoutonSolveListener());
-		boutonInit.addActionListener(new BoutonInitListener());
+		bouton.addActionListener(new BoutonSolveListener());
 		
 		setVisible(true);
 	}
@@ -103,39 +101,34 @@ public class Window extends JFrame {
 	class BoutonSolveListener implements ActionListener{
 		
 		public void actionPerformed(ActionEvent arg0) {
-			if (solution == null){
-				LinkedList<Move> sol = game.solve();
-				solution = sol;
-				boutonSolve.setName("Solution");
+			if (reset) {
+				solution = null;
+				bouton.setName("Solve");
+				
+				try {
+					game = new Game(file_name);
+				}
+				catch (IOException e){
+					e.printStackTrace();
+				}
+				int[] pos = (game.initialState).pos;
+				pan.init(pos);
+				repaint();
 			}
 			else {
-				t = new Thread(new PlayAnimation());
-				t.start();
-				boutonSolve.setEnabled(false);
-				boutonInit.setEnabled(true);
+				if (solution == null){
+					LinkedList<Move> sol = game.solve();
+					solution = sol;
+					bouton.setName("Solution");
+				}
+				else {
+					t = new Thread(new PlayAnimation());
+					t.start();
+					bouton.setName("Reset");
+					reset = true;
+				}
 			}
 			
-		}
-	}
-	
-	class BoutonInitListener implements ActionListener  {
-		
-		public void actionPerformed(ActionEvent arg0) {
-
-			solution = null;
-			boutonSolve.setName("Solve");
-			boutonSolve.setEnabled(true);
-			boutonInit.setEnabled(false);
-			
-			try {
-				game = new Game(file_name);
-			}
-			catch (IOException e){
-				e.printStackTrace();
-			}
-			int[] pos = (game.initialState).pos;
-			pan.init(pos);
-			repaint();
 		}
 	}
 	
