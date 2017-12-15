@@ -115,6 +115,7 @@ public class GameWindow extends JFrame {
 				int[] pos = (game.initialState).pos;
 				pan.init(pos);
 				setContentPane(container);
+				reset = false;
 			}
 			else {
 				if (solution == null){
