@@ -35,7 +35,7 @@ public class GameWindow extends JFrame {
 		this.file_name = file_name;
 		this.reset = false;
 		
-		setSize(750,750);
+		setSize(700,700);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		container.setBackground(Color.white);
