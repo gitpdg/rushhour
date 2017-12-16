@@ -64,14 +64,19 @@ public class GameWindow extends JFrame {
 		setVisible(true);
 	}
 	
-	public void movement(Move m, boolean last){
+	public void movement(Move m, boolean last, char orientation){
 		pan.setMove(m);
 		int distance = m.distance;
+		int t = 0;
+		if (orientation == 'h'){
+			t = pan.getWidth();
+		}
+		else t = pan.getHeight();
 		if (distance >= 0) {
 			if (last){
 				distance += game.vehicles[m.id-1].length;
 			}
-			for (int d = 0; d < distance*(pan.getWidth()) / game.size; d++) {
+			for (int d = 0; d < distance*(98*t/100) / game.size; d++) {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
@@ -85,7 +90,7 @@ public class GameWindow extends JFrame {
 			if (last){
 				distance -= game.vehicles[m.id-1].length;
 			}
-			for (int d = 0; d > distance*(pan.getWidth()) / game.size; d--) {
+			for (int d = 0; d > distance*(98*t/100) / game.size; d--) {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
@@ -155,10 +160,10 @@ public class GameWindow extends JFrame {
 			while (!solution.isEmpty()){
 				Move m = solution.remove();
 				if (solution.isEmpty()){
-					movement(m, true);
+					movement(m, true, game.vehicles[m.id-1].orientation);
 				}
 				else {
-				movement(m, false);
+				movement(m, false, game.vehicles[m.id-1].orientation);
 				}
 			}
 		}
