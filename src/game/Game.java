@@ -8,6 +8,7 @@ public class Game {
 	public int nbrVehicles;
 	public Vehicle[] vehicles;
 	public State initialState;
+	public int typeHeuristic = 0;
 	
 
 	public Game(String file_name) throws IOException {
