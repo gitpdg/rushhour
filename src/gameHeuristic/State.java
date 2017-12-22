@@ -3,12 +3,12 @@ import java.util.LinkedList;
 
 public class State {
 	public int[] pos;
-	boolean[][] isOccupied;
+	public int[][] isOccupied;
 
 
-	public State(int[] pos, boolean[][] isOccupied) {
+	public State(int[] pos, int[][] isOccupied) {
 		this.pos = pos;
-		this.isOccupied = isOccupied;
+		this.isOccupied = isOccupied; //contains the vehicle's id, or 0 if it is empty.
 	}
 	
 	public State(State parent, Move m, Vehicle[] vehicles) {
@@ -21,7 +21,7 @@ public class State {
 			this.pos[k] = parent.pos[k];
 		}
 		int size = (parent.isOccupied).length;
-		boolean[][] t = new boolean[size][size];
+		int[][] t = new int[size][size];
 		for (int k = 0; k < size; k++){
 			for (int j = 0; j < size; j++) {
 				t[k][j] = parent.isOccupied[k][j];
@@ -32,9 +32,9 @@ public class State {
 		//the vehicle that is to move is deleted from isOccupied
 		for (int i=pos[m.id - 1]; i<=pos[m.id - 1]+vehicles[m.id - 1].length - 1; i++) {
 			if (vehicles[m.id - 1].orientation=='h')
-				isOccupied[i - 1][vehicles[m.id-1].fixedPos - 1] = false;
+				isOccupied[i - 1][vehicles[m.id-1].fixedPos - 1] = 0;
 			else
-				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = false;
+				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = 0;
 		}
 
 		//the vehicle is moved
@@ -43,10 +43,10 @@ public class State {
 		//the vehicle that was moved is put back in isOccupied
 		for (int i=pos[m.id-1]; i<=pos[m.id-1]+vehicles[m.id-1].length - 1; i++) {
 			if (vehicles[m.id-1].orientation=='h'){
-				isOccupied[i-1][vehicles[m.id-1].fixedPos-1] = true;
+				isOccupied[i-1][vehicles[m.id-1].fixedPos-1] = m.id;
 			}
 			else
-				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = true;
+				isOccupied[vehicles[m.id-1].fixedPos-1][i-1] = m.id;
 		}
 
 	}
@@ -100,13 +100,13 @@ public class State {
 			if (vehicles[id].orientation=='h') {
 				//moving left
 				distance = -1;
-				while (pos[id] - 1 + distance >= 0 && !isOccupied[pos[id] - 1 + distance][vehicles[id].fixedPos - 1]) {
+				while (pos[id] - 1 + distance >= 0 && isOccupied[pos[id] - 1 + distance][vehicles[id].fixedPos - 1]==0) {
 					nextMoves.add(new Move(id+1, distance));
 					distance -= 1;
 				}
 				//moving right
 				distance = 1;
-				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && !isOccupied[pos[id] - 1 + vehicles[id].length - 1 + distance][vehicles[id].fixedPos - 1]) {
+				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && isOccupied[pos[id] - 1 + vehicles[id].length - 1 + distance][vehicles[id].fixedPos - 1]==0) {
 					nextMoves.add(new Move(id+1, distance));
 					distance += 1;
 				}
@@ -115,13 +115,13 @@ public class State {
 			else {
 				//moving up
 				distance = -1;
-				while (pos[id] - 1 + distance >= 0 && !isOccupied[vehicles[id].fixedPos - 1][pos[id] - 1 + distance]) {
+				while (pos[id] - 1 + distance >= 0 && isOccupied[vehicles[id].fixedPos - 1][pos[id] - 1 + distance]==0) {
 					nextMoves.add(new Move(id+1, distance));
 					distance -= 1;
 				}
 				//moving down
 				distance = 1;
-				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && !isOccupied[vehicles[id].fixedPos - 1][pos[id] + vehicles[id].length - 1 + distance - 1]){
+				while (pos[id] - 1 + vehicles[id].length - 1 + distance < size && isOccupied[vehicles[id].fixedPos - 1][pos[id] + vehicles[id].length - 1 + distance - 1]==0){
 					nextMoves.add(new Move(id+1, distance));
 					distance += 1;
 				}

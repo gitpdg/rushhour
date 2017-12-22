@@ -19,10 +19,10 @@ public class Game {
 		String[] line_split;
 		Vehicle[] pos = new Vehicle[nbrVehicles];
 		int[] posInit = new int[nbrVehicles];
-		boolean[][] t = new boolean[size][size];
+		int[][] t = new int[size][size];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				t[i][j] = false;
+				t[i][j] = 0;
 			}
 		}
 		for (int k = 0; k < nbrVehicles; k++) {
@@ -43,11 +43,11 @@ public class Game {
 				}
 				else {
 					for (int l = x - 1; l < x - 1 + length; l++) {
-						if (t[l][y-1]) {
-							System.out.println("None valid input");
+						if (t[l][y-1]>0) {
+							System.out.println("None valid input"); //overlap of two vehicles
 						}
 						else {
-							t[l][y-1] = true;
+							t[l][y-1] = id;
 						}
 					}
 					
@@ -63,11 +63,11 @@ public class Game {
 				}
 				else {
 					for (int l = y - 1; l < y - 1 + length; l++) {
-						if (t[x-1][l]) {
+						if (t[x-1][l]>0) {
 							System.out.println("None valid input");
 						}
 						else {
-							t[x-1][l] = true;
+							t[x-1][l] = id;
 						}
 					}
 					
