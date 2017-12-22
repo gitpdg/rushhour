@@ -26,9 +26,9 @@ public class Heuristic {
 	
 	public int heuristic1(State state, Vehicle[] vehicles, int size){
 		//counting the number of vehicles on the way of the red car
-		int y = vehicles[0].fixedPos; //x coordinate of the red car
+		int y = vehicles[0].fixedPos - 1; //y coordinate of the red car
 		int count = 0;
-		for (int x=state.pos[0]+vehicles[0].length; x < size ; x++) { //along the way
+		for (int x=state.pos[0]+vehicles[0].length-1; x < size ; x++) { //along the way
 			if (state.isOccupied[x][y]>0)
 				count+=1;
 		}
