@@ -38,8 +38,7 @@ public class Heuristic {
 	}
 	
 	public int heuristic2(State state, Vehicle[] vehicles, int size){
-		//TODO
-		//counting one per vehicle on the way, and adding one if at least one vehicle can't get out in one move
+		//returns 0 if we are at the solution, otherwise 1+number of vehicles on the way, and adding one if at least one of these vehicles can't get out in one move
 		if (state.pos[0]-1 + vehicles[0].length  == size)
 			return 0;
 
@@ -83,15 +82,17 @@ public class Heuristic {
 	}
 	
 	public int heuristic3(State state, Vehicle[] vehicles, int size){
+		//return 0 if we are at the solution, 1 otherwise
 		if (state.pos[0]-1 + vehicles[0].length  == size)
 			return 0;
 		return 1;
 	}
 	
 	public int heuristic4(State state, Vehicle[] vehicles, int size){
+		//combines the strategies of heuristic 1 and 3 : 0 if we are at the solution, 1+number of cars in the way otherwise
 		if (state.pos[0]-1 + vehicles[0].length  == size)
 			return 0;		
-		//counting the number of vehicles on the way of the red car
+
 		int y = vehicles[0].fixedPos - 1; //y coordinate of the red car
 		int count = 1;
 		for (int x=state.pos[0]+vehicles[0].length-1; x < size ; x++) { //along the way
