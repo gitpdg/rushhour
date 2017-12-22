@@ -95,6 +95,7 @@ public class Game {
 	
 	public LinkedList<Move> solve() {
 		LinkedList<Move> res = new LinkedList<Move>();
+		int numberSeenStates = 0;
 		
 		if (this.brutForce) {
 			Queue<State> q = new ArrayDeque<State>();
@@ -104,6 +105,7 @@ public class Game {
 			seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 			boolean solved = false;
 			while ((!q.isEmpty()) && !solved) {
+				numberSeenStates += 1;
 				s = q.remove();
 				int posFirstVehicle = s.pos[0];
 				int lengthFirstVehicle = (this.vehicles[0]).length;
@@ -118,7 +120,6 @@ public class Game {
 							q.add(s2);
 						}
 					}
-					System.out.println();
 				}
 			}
 			
@@ -141,6 +142,7 @@ public class Game {
 			seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 			boolean solved = false;
 			while ((!q.isEmpty()) && !solved) {
+				numberSeenStates += 1;
 				s = q.poll();
 				int posFirstVehicle = s.pos[0];
 				int lengthFirstVehicle = (this.vehicles[0]).length;
@@ -157,7 +159,6 @@ public class Game {
 							q.add(s2);
 						}
 					}
-					System.out.println();
 				}
 			}
 			
@@ -170,12 +171,6 @@ public class Game {
 				res.add(lastmove);
 			}
 			
-			LinkedList<Move> resInv = new LinkedList<Move>();
-			Iterator<Move> ite = res.descendingIterator();
-			while (ite.hasNext()) {
-				resInv.add(ite.next());
-			}
-			return resInv;
 		}
 		
 		LinkedList<Move> resInv = new LinkedList<Move>();
@@ -183,6 +178,8 @@ public class Game {
 		while (ite.hasNext()) {
 			resInv.add(ite.next());
 		}
+		System.out.println("Number of explored states : "+numberSeenStates);
+		System.out.println("Length of solution : "+resInv.size());
 		return resInv;
 	}
 

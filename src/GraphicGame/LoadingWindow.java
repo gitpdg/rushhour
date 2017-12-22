@@ -85,6 +85,8 @@ public class LoadingWindow extends JFrame {
 		
 		public void actionPerformed(ActionEvent arg0) {
 			String str = (String) choices.getSelectedItem();
+			System.out.println("");
+			System.out.println(str);
 			String file = str + ".txt";
 			try {
 				GameWindow gui = new GameWindow(file, str, typeheuristic, brutForce);
