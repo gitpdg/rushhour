@@ -1,4 +1,4 @@
-package gameHeuristic;
+package Game;
 
 public class Vehicle {
 

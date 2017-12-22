@@ -1,16 +1,17 @@
-package game;
+package Game;
 import java.io.*;
 import java.util.*;
 
-public class Game {
+public class GameH {
 	
 	public int size;
 	public int nbrVehicles;
 	public Vehicle[] vehicles;
 	public State initialState;
+	Heuristic heuristic;
 	
 
-	public Game(String file_name) throws IOException {
+	public GameH(String file_name, int typeheuristic) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file_name));
 		String line;
 		int size = Integer.valueOf(br.readLine());
@@ -18,10 +19,10 @@ public class Game {
 		String[] line_split;
 		Vehicle[] pos = new Vehicle[nbrVehicles];
 		int[] posInit = new int[nbrVehicles];
-		boolean[][] t = new boolean[size][size];
+		int[][] t = new int[size][size];
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				t[i][j] = false;
+				t[i][j] = 0;
 			}
 		}
 		for (int k = 0; k < nbrVehicles; k++) {
@@ -42,11 +43,11 @@ public class Game {
 				}
 				else {
 					for (int l = x - 1; l < x - 1 + length; l++) {
-						if (t[l][y-1]) {
+						if (t[l][y-1] != 0) {
 							System.out.println("None valid input");
 						}
 						else {
-							t[l][y-1] = true;
+							t[l][y-1] = v.id;
 						}
 					}
 					
@@ -62,11 +63,11 @@ public class Game {
 				}
 				else {
 					for (int l = y - 1; l < y - 1 + length; l++) {
-						if (t[x-1][l]) {
+						if (t[x-1][l] != 0) {
 							System.out.println("None valid input");
 						}
 						else {
-							t[x-1][l] = true;
+							t[x-1][l] = v.id;
 						}
 					}
 					
@@ -80,19 +81,22 @@ public class Game {
 		this.nbrVehicles = nbrVehicles;
 		this.vehicles = pos;
 		this.initialState = new State(posInit, t);
+		this.heuristic = new Heuristic(typeheuristic);
 	}
 	
 	
 	public LinkedList<Move> solve() {
 		LinkedList<Move> res = new LinkedList<Move>();
-		Queue<State> q = new ArrayDeque<State>();
+		PriorityQueue<State> q = new PriorityQueue<State>(nbrVehicles, new ComparatorState());
 		SeenStates seen = new SeenStates();
 		State s = this.initialState;
+		s.setheuristic(heuristic, vehicles, size);
+		s.setdistance(0);
 		q.add(s);
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
 		while ((!q.isEmpty()) && !solved) {
-			s = q.remove();
+			s = q.poll();
 			int posFirstVehicle = s.pos[0];
 			int lengthFirstVehicle = (this.vehicles[0]).length;
 			if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
@@ -103,6 +107,8 @@ public class Game {
 				for (Move m : moves){
 					State s2 = new State(s, m, this.vehicles);
 					if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+						s2.setheuristic(heuristic, vehicles, size);
+						s2.setdistance(s.distance + 1);
 						q.add(s2);
 					}
 				}

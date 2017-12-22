@@ -21,8 +21,11 @@ public class LoadingWindow extends JFrame {
 	JPanel container = new JPanel();
 	Bouton start;
 	JComboBox<String> choices = new JComboBox<String>();
+	int typeheuristic;
+	boolean brutForce;
 	
-	public LoadingWindow() throws IOException{
+	public LoadingWindow(int type, boolean brutForce) throws IOException{
+		
 		super("Start new game");
 		setSize(250,110);
 		setLocationRelativeTo(null);
@@ -63,6 +66,8 @@ public class LoadingWindow extends JFrame {
 		start.addActionListener(new StartButtonListener());
 		
 		setVisible(true);
+		this.typeheuristic = type;
+		this.brutForce = brutForce;
 	}
 	
 	public class ItemState implements ItemListener{
@@ -82,7 +87,7 @@ public class LoadingWindow extends JFrame {
 			String str = (String) choices.getSelectedItem();
 			String file = str + ".txt";
 			try {
-				GameWindow gui = new GameWindow(file, str);
+				GameWindow gui = new GameWindow(file, str, typeheuristic, brutForce);
 				gui.setVisible(true);
 				setVisible(false);
 			}

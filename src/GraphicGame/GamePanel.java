@@ -1,8 +1,10 @@
 package GraphicGame;
 
 import javax.swing.*;
+
+import Game.*;
+
 import java.awt.*;
-import game.*;
 import java.util.Random;
 
 public class GamePanel extends JPanel {

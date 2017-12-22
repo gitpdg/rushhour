@@ -11,9 +11,10 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import game.Game;
-import game.Move;
-import game.Vehicle;
+import Game.Game;
+import Game.Move;
+import Game.Vehicle;
+
 
 public class GameWindow extends JFrame {
 	String file_name;
@@ -27,10 +28,14 @@ public class GameWindow extends JFrame {
 	boolean reset;
 	private Thread t;
 	String path = "Games/";
+	int typeheuristic;
+	boolean brutForce;
 	
-	public GameWindow(String file_name, String windowName) throws IOException{
+	public GameWindow(String file_name, String windowName, int type, boolean brutForce) throws IOException{
 		super(windowName);
-		this.game = new Game(path + file_name);
+		this.game = new Game(path + file_name, type, brutForce);
+		this.typeheuristic = type;
+		this.brutForce = brutForce;
 		this.solution = null;
 		this.file_name = file_name;
 		this.reset = false;
@@ -66,6 +71,7 @@ public class GameWindow extends JFrame {
 	
 	public void movement(Move m, boolean last, char orientation){
 		pan.setMove(m);
+		int timeFreeze = 2;
 		int distance = m.distance;
 		int t = 0;
 		if (orientation == 'h'){
@@ -80,7 +86,7 @@ public class GameWindow extends JFrame {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
-			        Thread.sleep(3);
+			        Thread.sleep(timeFreeze);
 			      } catch (InterruptedException e) {
 			        e.printStackTrace();
 			      }
@@ -94,7 +100,7 @@ public class GameWindow extends JFrame {
 				pan.setdistance(d);
 				pan.repaint();
 				try {
-			        Thread.sleep(3);
+			        Thread.sleep(timeFreeze);
 			      } catch (InterruptedException e) {
 			        e.printStackTrace();
 			      }
@@ -112,7 +118,7 @@ public class GameWindow extends JFrame {
 				bouton.setName("Solve");
 				
 				try {
-					game = new Game(path + file_name);
+					game = new Game(path + file_name, typeheuristic, brutForce);
 				}
 				catch (IOException e){
 					e.printStackTrace();
@@ -143,7 +149,7 @@ public class GameWindow extends JFrame {
 		 public void actionPerformed(ActionEvent arg0){
 			
 			try {
-				LoadingWindow gui = new LoadingWindow();
+				LoadingWindow gui = new LoadingWindow(typeheuristic, brutForce);
 				gui.setVisible(true);
 				setVisible(false);
 			 }
