@@ -28,7 +28,7 @@ public class Heuristic {
 	
 	public int heuristic1(State state, Vehicle[] vehicles, int size){
 		//counting the number of vehicles on the way of the red car
-		int y = vehicles[0].fixedPos - 1; //y coordinate of the red car
+		int y = vehicles[0].fixedPos - 1; //y-coordinate of the red car
 		int count = 0;
 		for (int x=state.pos[0]+vehicles[0].length-1; x < size ; x++) { //along the way
 			if (state.isOccupied[x][y]>0)
@@ -39,36 +39,45 @@ public class Heuristic {
 	
 	public int heuristic2(State state, Vehicle[] vehicles, int size){
 		//TODO
-		//counting one per vehicle on the way that can move out in one move and two for vehicles on the way that can't
-		int yFixed = vehicles[0].fixedPos; //x coordinate of the red car
-		int count = 0;
+		//counting one per vehicle on the way, and adding one if at least one vehicle can't get out in one move
+		if (state.pos[0]-1 + vehicles[0].length  == size)
+			return 0;
+
+		int yFixed = vehicles[0].fixedPos -1; //y-coordinate of the red car
+		int count = 1;
 		int id, y;
 		Vehicle v;
 		boolean canMoveDown,canMoveUp;
-		for (int x=state.pos[0]+vehicles[0].length; x < size ; x++) { //along the way
+		boolean blocked = false;
+		for (int x=state.pos[0]-1 + vehicles[0].length; x < size ; x++) { //along the way
 			if (state.isOccupied[x][yFixed]>0) {
 				id = state.isOccupied[x][yFixed];
-				v = vehicles[id+1];
+				v = vehicles[id-1];
 				y = yFixed;
-				
-				canMoveDown = true;
-				//can I move down ?
-				if (v.length + yFixed + 1 < size) {
-					for (y = state.pos[id]+v.length; y < yFixed+v.length+1; y++ ) {
-						if (state.isOccupied[x][y]>0)
-							canMoveDown=false;
+				if (!blocked) { //no need to check again if one car is already blocked
+					canMoveDown = true;
+					//can I move down ?
+					if (v.length + yFixed + 1 < size) {
+						for (y = state.pos[id]-1 + v.length; y < yFixed + 1 + v.length; y++ ) {
+							if (state.isOccupied[x][y]>0)
+								canMoveDown=false;
+						}
 					}
-				}
-				canMoveUp = true;
-				//can I move up ?
-				if (v.length <= yFixed) { //TODO
-					for (y = state.pos[id]-1; y < yFixed+v.length+1; y-- ) { //TODO
-						if (state.isOccupied[x][y]>0)
-							canMoveUp=false;
+					canMoveUp = true;
+					//can I move up ?
+					if (v.length <= yFixed) {
+						for (y = state.pos[id]-1; y >= yFixed - v.length; y-- ) {
+							if (state.isOccupied[x][y]>0)
+								canMoveUp=false;
+						}
 					}
+					if (!canMoveDown && !canMoveUp)
+						blocked = true;
 				}
 			}
 		}
+		if (blocked)
+			count += 1;
 		return count;
 		
 	}
