@@ -11,6 +11,8 @@ public class Heuristic {
 	
 	public int value(State state, Vehicle[] vehicles, int size) {
 		switch(typeHeuristic) {
+		case 4: return heuristic4(state, vehicles, size);
+		case 3: return heuristic3(state, vehicles, size);
 		case 2: return heuristic2(state, vehicles, size);
 		case 1: return heuristic1(state, vehicles, size);
 		default: return heuristic0();
@@ -69,5 +71,24 @@ public class Heuristic {
 		}
 		return count;
 		
+	}
+	
+	public int heuristic3(State state, Vehicle[] vehicles, int size){
+		if (state.pos[0]-1 + vehicles[0].length  == size)
+			return 0;
+		return 1;
+	}
+	
+	public int heuristic4(State state, Vehicle[] vehicles, int size){
+		if (state.pos[0]-1 + vehicles[0].length  == size)
+			return 0;		
+		//counting the number of vehicles on the way of the red car
+		int y = vehicles[0].fixedPos - 1; //y coordinate of the red car
+		int count = 1;
+		for (int x=state.pos[0]+vehicles[0].length-1; x < size ; x++) { //along the way
+			if (state.isOccupied[x][y]>0)
+				count+=1;
+		}
+		return count;
 	}
 }

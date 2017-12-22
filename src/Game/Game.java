@@ -94,6 +94,8 @@ public class Game {
 	
 	
 	public LinkedList<Move> solve() {
+		long startingTime = System.currentTimeMillis();
+		
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
 		
@@ -178,6 +180,7 @@ public class Game {
 		while (ite.hasNext()) {
 			resInv.add(ite.next());
 		}
+		System.out.println("Execution time : "+ (System.currentTimeMillis()-startingTime)+ "ms");
 		System.out.println("Number of explored states : "+numberSeenStates);
 		System.out.println("Length of solution : "+resInv.size());
 		return resInv;

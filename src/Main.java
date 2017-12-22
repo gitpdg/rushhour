@@ -7,7 +7,7 @@ public class Main {
 	
 	public static void main(String[] args) throws IOException{
 		boolean useBrutForce = false;
-		int typeheuristic = 1;
+		int typeheuristic = 4;
 		LoadingWindow gui = new LoadingWindow(typeheuristic, useBrutForce);
 		gui.setVisible(true);
 	}
