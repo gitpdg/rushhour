@@ -9,6 +9,7 @@ public class Main {
 		boolean graphicTest = false;
 		boolean useBrutForce = false;
 		int typeheuristic = 1;
+<<<<<<< HEAD
 		
 		if (graphicTest) {
 			LoadingWindow gui = new LoadingWindow(typeheuristic, useBrutForce);
@@ -19,5 +20,9 @@ public class Main {
 			CompareHeuristic c = new CompareHeuristic(0,4);
 			c.run();
 		}
+=======
+		LoadingWindow gui = new LoadingWindow(typeheuristic, useBrutForce);
+		gui.setVisible(true);
+>>>>>>> branch 'master' of https://github.com/gitpdg/rushhour
 	}
 }

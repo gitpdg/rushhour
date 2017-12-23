@@ -149,7 +149,7 @@ public class GameWindow extends JFrame {
 						pan.setImpossible(true);
 						pan.repaint();
 					}
-					//bouton.setName("Reset");
+					bouton.setName("Reset");
 					reset = true;
 				}
 			}
