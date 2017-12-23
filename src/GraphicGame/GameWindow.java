@@ -3,12 +3,14 @@ package GraphicGame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Game.Game;
@@ -19,8 +21,8 @@ import Game.Vehicle;
 public class GameWindow extends JFrame {
 	String file_name;
 	Game game;
-	JFrame window;
 	LinkedList<Move> solution;
+	boolean solved;
 	private GamePanel pan;
 	private JPanel container = new JPanel();
 	private Bouton bouton = new Bouton("Solve");
@@ -39,6 +41,8 @@ public class GameWindow extends JFrame {
 		this.solution = null;
 		this.file_name = file_name;
 		this.reset = false;
+		this.solved = false;
+		
 		
 		setSize(700,700);
 		setLocationRelativeTo(null);
@@ -115,6 +119,7 @@ public class GameWindow extends JFrame {
 		public void actionPerformed(ActionEvent arg0) {
 			if (reset) {
 				solution = null;
+				solved = false;
 				bouton.setName("Solve");
 				
 				try {
@@ -129,15 +134,22 @@ public class GameWindow extends JFrame {
 				reset = false;
 			}
 			else {
-				if (solution == null){
+				if (!solved){
 					LinkedList<Move> sol = game.solve();
 					solution = sol;
+					solved = true;
 					bouton.setName("Solution");
 				}
 				else {
-					t = new Thread(new PlayAnimation());
-					t.start();
-					bouton.setName("Reset");
+					if (solution != null) {
+						t = new Thread(new PlayAnimation());
+						t.start();
+					}
+					else {
+						pan.setImpossible(true);
+						pan.repaint();
+					}
+					//bouton.setName("Reset");
 					reset = true;
 				}
 			}

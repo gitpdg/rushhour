@@ -98,14 +98,15 @@ public class Game {
 		
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
+		State s = this.initialState;
+		SeenStates seen = new SeenStates();
+		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
+		boolean solved = false;
 		
 		if (this.brutForce) {
 			Queue<State> q = new ArrayDeque<State>();
-			SeenStates seen = new SeenStates();
-			State s = this.initialState;
 			q.add(s);
-			seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
-			boolean solved = false;
+			
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.remove();
@@ -124,25 +125,14 @@ public class Game {
 					}
 				}
 			}
-			
-			Move lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
-			s.Previous(lastmove);
-			res.add(lastmove);
-			while (!s.equal(this.initialState)){
-				lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
-				s.Previous(lastmove);
-				res.add(lastmove);
-			}
 		}
+		
 		else {
 			PriorityQueue<State> q = new PriorityQueue<State>(nbrVehicles, new ComparatorState());
-			SeenStates seen = new SeenStates();
-			State s = this.initialState;
 			s.setheuristic(heuristic, vehicles, size);
 			s.setdistance(0);
 			q.add(s);
-			seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
-			boolean solved = false;
+			
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.poll();
@@ -164,6 +154,11 @@ public class Game {
 				}
 			}
 			
+		}
+		
+		LinkedList<Move> resInv = new LinkedList<Move>();
+		
+		if (solved) {
 			Move lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
 			s.Previous(lastmove);
 			res.add(lastmove);
@@ -171,18 +166,22 @@ public class Game {
 				lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
 				s.Previous(lastmove);
 				res.add(lastmove);
-			}
+				}
 			
+			
+			Iterator<Move> ite = res.descendingIterator();
+			while (ite.hasNext()) {
+				resInv.add(ite.next());
+			}
+			System.out.println("Execution time : "+ (System.currentTimeMillis()-startingTime)+ "ms");
+			System.out.println("Number of explored states : "+numberSeenStates);
+			System.out.println("Length of solution : "+resInv.size());
+		}
+		else {
+			resInv = null;
+			System.out.println("Impossible");
 		}
 		
-		LinkedList<Move> resInv = new LinkedList<Move>();
-		Iterator<Move> ite = res.descendingIterator();
-		while (ite.hasNext()) {
-			resInv.add(ite.next());
-		}
-		System.out.println("Execution time : "+ (System.currentTimeMillis()-startingTime)+ "ms");
-		System.out.println("Number of explored states : "+numberSeenStates);
-		System.out.println("Length of solution : "+resInv.size());
 		return resInv;
 	}
 

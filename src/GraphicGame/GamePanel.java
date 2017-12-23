@@ -1,11 +1,15 @@
 package GraphicGame;
 
-import javax.swing.*;
-
-import Game.*;
-
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.util.Random;
+
+import javax.swing.JPanel;
+
+import Game.Move;
+import Game.Vehicle;
 
 public class GamePanel extends JPanel {
 	
@@ -17,6 +21,7 @@ public class GamePanel extends JPanel {
 	Move move;
 	int distancefaite;
 	Color[] colors = null;
+	boolean impossible = false;
 	
 	public GamePanel(int size, int nbrVehicles, Vehicle[] vehicles, int[] pos){
 		super();
@@ -25,29 +30,57 @@ public class GamePanel extends JPanel {
 		this.vehicles = vehicles;
 		this.pos = pos;
 		this.move = null;
-		distancefaite = 0;
+		this.distancefaite = 0;
+		this.impossible = false;		
 	}
 	
 	
 	public void paintComponent(Graphics g){
-		if (this.move == null) {
+		if (impossible) {
+			/*try {
+				Image img = ImageIO.read(new File("impossible.jpg"));
+				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
+			}
+			catch (IOException e){
+				e.printStackTrace();
+			}*/
 			paintBackGround(g);
 			Grille(g);
-			this.colors = paintVehicles(g);
+			paintVehicles(g);
+			Graphics2D g2d = (Graphics2D)g;
+			Font font = new Font("Courier", Font.BOLD, 100);
+			g2d.setFont(font);
+		    g2d.setColor(Color.blue);
+		    g2d.rotate(Math.toRadians(-20));
+			g2d.drawString("IMPOSSIBLE", -this.getWidth()/8, 3*this.getHeight() / 4);
 		}
 		else {
-			paintBackGround(g);
-			Grille(g);
-			paintVehiclesMovement(g);
+			if (this.move == null) {
+				paintBackGround(g);
+				Grille(g);
+				if (this.colors == null) resetColor();
+				paintVehicles(g);
+			}
+			else {
+				paintBackGround(g);
+				Grille(g);
+				paintVehiclesMovement(g);
+			}
 		}
 	}
+	
+	public void setImpossible(boolean b){
+		this.impossible = b;
+	}
+	
 	
 	public void init(int[] positions){
 		this.setpos(positions);
 		this.move = null;
-		this.colors = null;
 		this.distancefaite = 0;
+		this.impossible = false;
 	}
+	
 	public void setMove(Move m){
 		this.move = m;
 	}
@@ -146,7 +179,7 @@ public class GamePanel extends JPanel {
 		}
 	}
 	
-	public Color[] paintVehicles(Graphics g){
+	public void resetColor(){
 		Color[] colors = new Color[nbrVehicles];
 		Random rand = new Random();
 		for (int i = 0; i < this.nbrVehicles; i++){
@@ -156,11 +189,16 @@ public class GamePanel extends JPanel {
 			else {
 				colors[i] = randomColor(rand);
 			}
+		}
+		this.colors = colors;
+	}
+	
+	public void paintVehicles(Graphics g){
+		for (int i = 0; i < this.nbrVehicles; i++){
 			Vehicle v = this.vehicles[i];
 			int position = this.pos[i];
 			paintVehicle(g, colors[i], v, position, false);
 		}
-		return(colors);
 	}
 	
 	public void paintVehiclesMovement(Graphics g) {
