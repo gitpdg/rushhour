@@ -9,14 +9,14 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 public class Game {
-	
+
 	public int size;
 	public int nbrVehicles;
 	public Vehicle[] vehicles;
 	public State initialState;
 	Heuristic heuristic;
 	boolean brutForce;
-	
+
 
 	public Game(String file_name, int typeheuristic, boolean brutForce) throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader(file_name));
@@ -57,10 +57,10 @@ public class Game {
 							t[l][y-1] = v.id;
 						}
 					}
-					
+
 				}
 			}
-			
+
 			else {
 				v = new Vehicle(id, length, orientation, x);
 				pos[k] = v;
@@ -77,13 +77,13 @@ public class Game {
 							t[x-1][l] = v.id;
 						}
 					}
-					
+
 				}
 			}
-			
+
 		}
 		br.close();
-		
+
 		this.size = size;
 		this.nbrVehicles = nbrVehicles;
 		this.vehicles = pos;
@@ -91,22 +91,22 @@ public class Game {
 		this.heuristic = new Heuristic(typeheuristic);
 		this.brutForce = brutForce;
 	}
-	
-	
+
+
 	public LinkedList<Move> solve() {
 		long startingTime = System.currentTimeMillis();
-		
+
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
 		State s = this.initialState;
 		SeenStates seen = new SeenStates();
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
-		
+
 		if (this.brutForce) {
 			Queue<State> q = new ArrayDeque<State>();
 			q.add(s);
-			
+
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.remove();
@@ -126,13 +126,13 @@ public class Game {
 				}
 			}
 		}
-		
+
 		else {
 			PriorityQueue<State> q = new PriorityQueue<State>(nbrVehicles, new ComparatorState());
 			s.setheuristic(heuristic, vehicles, size);
 			s.setdistance(0);
 			q.add(s);
-			
+
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.poll();
@@ -153,11 +153,11 @@ public class Game {
 					}
 				}
 			}
-			
+
 		}
-		
+
 		LinkedList<Move> resInv = new LinkedList<Move>();
-		
+
 		if (solved) {
 			Move lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
 			s.Previous(lastmove);
@@ -166,9 +166,9 @@ public class Game {
 				lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
 				s.Previous(lastmove);
 				res.add(lastmove);
-				}
-			
-			
+			}
+
+
 			Iterator<Move> ite = res.descendingIterator();
 			while (ite.hasNext()) {
 				resInv.add(ite.next());
@@ -181,9 +181,104 @@ public class Game {
 			resInv = null;
 			System.out.println("Impossible");
 		}
-		
+
 		return resInv;
 	}
 
-	
+	public int[] solveStat() {
+		//returns [execution time, number of visited states, length of solution]
+		long startingTime = System.currentTimeMillis();
+
+		LinkedList<Move> res = new LinkedList<Move>();
+		int numberSeenStates = 0;
+		State s = this.initialState;
+		SeenStates seen = new SeenStates();
+		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
+		boolean solved = false;
+
+		if (this.brutForce) {
+			Queue<State> q = new ArrayDeque<State>();
+			q.add(s);
+
+			while ((!q.isEmpty()) && !solved) {
+				numberSeenStates += 1;
+				s = q.remove();
+				int posFirstVehicle = s.pos[0];
+				int lengthFirstVehicle = (this.vehicles[0]).length;
+				if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
+					solved = true;
+				}
+				else {
+					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
+					for (Move m : moves){
+						State s2 = new State(s, m, this.vehicles);
+						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+							q.add(s2);
+						}
+					}
+				}
+			}
+		}
+
+		else {
+			PriorityQueue<State> q = new PriorityQueue<State>(nbrVehicles, new ComparatorState());
+			s.setheuristic(heuristic, vehicles, size);
+			s.setdistance(0);
+			q.add(s);
+
+			while ((!q.isEmpty()) && !solved) {
+				numberSeenStates += 1;
+				s = q.poll();
+				int posFirstVehicle = s.pos[0];
+				int lengthFirstVehicle = (this.vehicles[0]).length;
+				if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
+					solved = true;
+				}
+				else {
+					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
+					for (Move m : moves){
+						State s2 = new State(s, m, this.vehicles);
+						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+							s2.setheuristic(heuristic, vehicles, size);
+							s2.setdistance(s.distance + 1);
+							q.add(s2);
+						}
+					}
+				}
+			}
+
+		}
+
+		LinkedList<Move> resInv = new LinkedList<Move>();
+
+		if (solved) {
+			Move lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
+			s.Previous(lastmove);
+			res.add(lastmove);
+			while (!s.equal(this.initialState)){
+				lastmove = s.getLastMove(seen, this.nbrVehicles, this.size);
+				s.Previous(lastmove);
+				res.add(lastmove);
+			}
+
+
+			Iterator<Move> ite = res.descendingIterator();
+			while (ite.hasNext()) {
+				resInv.add(ite.next());
+			}
+		}
+		else {
+			resInv = null;
+			System.out.println("Impossible"); 
+		}
+		int[] result = new int[3];
+		result[0] = ((Long) (System.currentTimeMillis()-startingTime)).intValue();
+		result[1] = numberSeenStates;
+		if (resInv == null)
+			result[2] = -1;
+		else
+			result[2] = resInv.size();
+		return result ;
+	}
+
 }

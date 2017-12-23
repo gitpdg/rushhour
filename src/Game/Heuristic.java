@@ -30,7 +30,7 @@ public class Heuristic {
 		//counting the number of vehicles on the way of the red car
 		int y = vehicles[0].fixedPos - 1; //y-coordinate of the red car
 		int count = 0;
-		for (int x=state.pos[0]+vehicles[0].length-1; x < size ; x++) { //along the way
+		for (int x=state.pos[0]-1+vehicles[0].length; x < size ; x++) { //along the way
 			if (state.isOccupied[x][y]>0)
 				count+=1;
 		}
@@ -48,7 +48,7 @@ public class Heuristic {
 		Vehicle v;
 		boolean canMoveDown,canMoveUp;
 		boolean blocked = false;
-		for (int x=state.pos[0]-1 + vehicles[0].length; x < size ; x++) { //along the way
+		for (int x=state.pos[0]-1 + vehicles[0].length; x < size ; x++) { //along the way of the red car
 			if (state.isOccupied[x][yFixed]>0) {
 				id = state.isOccupied[x][yFixed];
 				v = vehicles[id-1];
@@ -57,7 +57,7 @@ public class Heuristic {
 					canMoveDown = true;
 					//can I move down ?
 					if (v.length + yFixed + 1 < size) {
-						for (y = state.pos[id]-1 + v.length; y < yFixed + 1 + v.length; y++ ) {
+						for (y = state.pos[id-1]-1 + v.length; y < yFixed + 1 + v.length; y++ ) {
 							if (state.isOccupied[x][y]>0)
 								canMoveDown=false;
 						}
@@ -65,7 +65,7 @@ public class Heuristic {
 					canMoveUp = true;
 					//can I move up ?
 					if (v.length <= yFixed) {
-						for (y = state.pos[id]-1; y >= yFixed - v.length; y-- ) {
+						for (y = state.pos[id-1]-1; y >= yFixed - v.length; y-- ) {
 							if (state.isOccupied[x][y]>0)
 								canMoveUp=false;
 						}
