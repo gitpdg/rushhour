@@ -1,4 +1,10 @@
+import java.awt.Color;
 import java.io.IOException;
+import java.util.Random;
+
+import javax.swing.JFrame;
+
+import org.math.plot.Plot2DPanel;
 
 import Game.Game;
 
@@ -13,6 +19,7 @@ public class CompareHeuristic {
 	}
 	
 	public void run() {
+		double[][] times = new double[max - min + 1][40];
 		String fileName;
 		Game game;
 		for (int i=1; i<=40; i++) {
@@ -28,10 +35,68 @@ public class CompareHeuristic {
 					game = new Game(path + fileName + ".txt", type, false);
 					int[] result = game.solveStat();
 					System.out.println(fileName+"   heuristic "+type+"   "+result[0]+"ms   "+result[1]+" visited states   "+result[2]+" moves");
+					times[type-min][i-1] = result[0];
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		printHeuristics(times);
+	}
+	
+	public Color randomColor(Random rand){
+		float red = rand.nextFloat();
+		float green = rand.nextFloat();
+		float blue = rand.nextFloat();
+		Color randomColor = new Color(red, green, blue);
+		return (randomColor);
+	}
+	
+	public Color chooseColor(Color[] colors, int i){
+		boolean find = false;
+		Random rand = new Random();
+		Color c = null;
+		while (!find) {
+			c = randomColor(rand);
+			boolean used = false;
+			for (int j = 0; j < i; j++){
+				if (c.equals(colors[j])) used = true;
+			}
+			if (!used) find = true;
+		}
+		return c;
+	}
+	
+	public void printHeuristics(double[][] times){
+		Plot2DPanel plot = new Plot2DPanel();
+		int n = times.length;
+		int m = times[0].length;
+		Color[] colors = new Color[n];
+		
+		double[] x = new double[m];
+		for (int k = 0; k < m; k++){
+			x[k] = k + 1;
+		}
+		Color c = Color.GREEN;
+		for (int i = 0; i < n; i++){
+			String name = "Heuristic" + min + i;
+			double[] y = times[i];
+			switch(i) {
+			case 0: c = Color.RED;break;
+			case 1: c = Color.BLUE;break;
+			case 2: c = Color.GREEN;break;
+			case 3: c = Color.ORANGE;break;
+			case 4: c = Color.BLACK;break;
+			default: c = chooseColor(colors, i);break;
+			}
+			colors[i] = c;
+			plot.addLegend("SOUTH");
+			plot.addLinePlot(name, c, x, y);
+		}
+		
+		JFrame window = new JFrame("Comparaison heuristics : temps en fonction des games");
+		window.setSize(2000,1000);
+		window.setContentPane(plot);
+		window.setVisible(true);
 	}
 }
