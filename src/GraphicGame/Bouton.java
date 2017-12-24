@@ -1,10 +1,15 @@
 package GraphicGame;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+import javax.swing.JButton;
 
 public class Bouton extends JButton implements MouseListener {
+	static final long serialVersionUID = 1;
 	private String name;
 	private Color c;
 	
