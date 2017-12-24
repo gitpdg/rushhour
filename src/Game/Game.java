@@ -119,7 +119,7 @@ public class Game {
 					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
 					for (Move m : moves){
 						State s2 = new State(s, m, this.vehicles);
-						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+						if (seen.add(s2, m, this.nbrVehicles, this.size)[0] == -1){
 							q.add(s2);
 						}
 					}
@@ -132,23 +132,44 @@ public class Game {
 			s.setheuristic(heuristic, vehicles, size);
 			s.setdistance(0);
 			q.add(s);
-
+			
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.poll();
-				int posFirstVehicle = s.pos[0];
-				int lengthFirstVehicle = (this.vehicles[0]).length;
-				if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
-					solved = true;
-				}
-				else {
-					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
-					for (Move m : moves){
-						State s2 = new State(s, m, this.vehicles);
-						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
-							s2.setheuristic(heuristic, vehicles, size);
+				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
+					seen.explore(s, this.nbrVehicles, this.size);
+					/*System.out.println(s.toString());
+					System.out.println();
+					System.out.println("distance" + s.distance + "heuristic" + s.heuristic);*/
+					int posFirstVehicle = s.pos[0];
+					int lengthFirstVehicle = (this.vehicles[0]).length;
+					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
+						solved = true;
+					}
+					else {
+						LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
+						for (Move m : moves){
+							//boolean add = false;
+							State s2 = new State(s, m, this.vehicles);
 							s2.setdistance(s.distance + 1);
-							q.add(s2);
+							int[] vu = seen.add(s2, m, this.nbrVehicles, this.size);
+							
+							if (vu[0] == -1){
+								s2.setheuristic(heuristic, vehicles, size);
+								seen.changedHeuristic(s2, this.nbrVehicles, this.size);
+								q.add(s2);
+								//add = true;
+							}
+							else{
+								if (vu[1] == 0){
+									if (s.distance + 1 < vu[0]){
+										s2.heuristic = vu[2];
+										q.add(s2);
+										//add = true;
+									}
+								}
+							}
+							//System.out.println("Move :" + m.toString() + "seen" + vu[0] + "isExplored" + vu[1] + "distance" + s2.distance + "heuristic" + s2.heuristic + "add" + add);
 						}
 					}
 				}
@@ -212,7 +233,7 @@ public class Game {
 					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
 					for (Move m : moves){
 						State s2 = new State(s, m, this.vehicles);
-						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
+						if (seen.add(s2, m, this.nbrVehicles, this.size)[0] == -1){
 							q.add(s2);
 						}
 					}
@@ -225,23 +246,37 @@ public class Game {
 			s.setheuristic(heuristic, vehicles, size);
 			s.setdistance(0);
 			q.add(s);
+			
 
 			while ((!q.isEmpty()) && !solved) {
 				numberSeenStates += 1;
 				s = q.poll();
-				int posFirstVehicle = s.pos[0];
-				int lengthFirstVehicle = (this.vehicles[0]).length;
-				if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
-					solved = true;
-				}
-				else {
-					LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
-					for (Move m : moves){
-						State s2 = new State(s, m, this.vehicles);
-						if (!seen.add(s2, m, this.nbrVehicles, this.size)){
-							s2.setheuristic(heuristic, vehicles, size);
+				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
+					int posFirstVehicle = s.pos[0];
+					int lengthFirstVehicle = (this.vehicles[0]).length;
+					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
+						solved = true;
+					}
+					else {
+						LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
+						for (Move m : moves){
+							State s2 = new State(s, m, this.vehicles);
 							s2.setdistance(s.distance + 1);
-							q.add(s2);
+							int[] vu = seen.add(s2, m, this.nbrVehicles, this.size);
+							
+							if (vu[0] == -1){
+								s2.setheuristic(heuristic, vehicles, size);
+								seen.changedHeuristic(s2, this.nbrVehicles, this.size);
+								q.add(s2);
+							}
+							else{
+								if (vu[1] == 0){
+									if (s.distance + 1 < vu[0]){
+										s2.heuristic = vu[2];
+										q.add(s2);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -280,5 +315,6 @@ public class Game {
 			result[2] = resInv.size();
 		return result ;
 	}
+	
 
 }

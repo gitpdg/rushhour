@@ -82,20 +82,14 @@ public class State {
 			c = c + Integer.toString(pos[i]) + "/";
 		}
 		
-		/*String d = "";
+		String d = "";
 		for (int j = 0; j < isOccupied.length; j ++){
 			for (int i = 0; i < isOccupied.length; i++){
-				if (isOccupied[i][j]) {
-					d += "1";
-				}
-				else {
-					d += "0";
-				}
+				d += isOccupied[i][j];
 			}
 			d += "\n";
 		}
-		return(c + "\n" + d);*/
-		return(c);
+		return(c + "\n" + d);
 	}
 	
 	public void Previous(Move m){
