@@ -16,7 +16,7 @@ public class Main {
 		}
 		else {
 			CompareHeuristic c = new CompareHeuristic(0,4);
-			c.run();
+			c.run(10);
 		}
 	}
 }
