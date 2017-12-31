@@ -3,14 +3,12 @@ package GraphicGame;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Game.Game;
@@ -19,6 +17,8 @@ import Game.Vehicle;
 
 
 public class GameWindow extends JFrame {
+	static final long serialVersionUID = 3;
+	
 	String file_name;
 	Game game;
 	LinkedList<Move> solution;

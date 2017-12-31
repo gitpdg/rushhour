@@ -32,16 +32,7 @@ public class CompareHeuristic {
 				}
 				else {
 					fileName = "GameP"+i;
-				}
-				
-				try {
-					game = new Game(path + fileName + ".txt", type, false);
-					result = game.solveStat();
-					System.out.println(fileName+"   heuristic "+type+"   "+result[0]+"ms   "+result[1]+" visited states   "+result[2]+" moves");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-					
+				}					
 				time = 0;
 				for (int j=0; j<iter;j++) {
 					try {
@@ -83,6 +74,7 @@ public class CompareHeuristic {
 	}
 	
 	public void printHeuristics(double[][] times){
+		System.out.println("printing plot...");
 		Plot2DPanel plot = new Plot2DPanel();
 		int n = times.length;
 		int m = times[0].length;
@@ -105,7 +97,7 @@ public class CompareHeuristic {
 			default: c = chooseColor(colors, i);break;
 			}
 			colors[i] = c;
-			plot.addLegend("SOUTH");
+			plot.addLegend("EAST$");
 			plot.addLinePlot(name, c, x, y);
 		}
 		

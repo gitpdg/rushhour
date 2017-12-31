@@ -12,6 +12,7 @@ import Game.Move;
 import Game.Vehicle;
 
 public class GamePanel extends JPanel {
+	static final long serialVersionUID = 2;
 	
 	JPanel pan;
 	int size;

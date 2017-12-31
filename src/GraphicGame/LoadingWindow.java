@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class LoadingWindow extends JFrame {
+	static final long serialVersionUID = 4;
+	
 	JPanel container = new JPanel();
 	Bouton start;
 	JComboBox<String> choices = new JComboBox<String>();
