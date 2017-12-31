@@ -5,9 +5,11 @@ import GraphicGame.LoadingWindow;
 public class Main {
 	
 	public static void main(String[] args) throws IOException{
-		boolean graphicTest = true;
+		boolean graphicTest = false;
 		boolean useBrutForce = false;
 		int typeheuristic = 5;
+		boolean SortedPrint = true;
+		int SortedPrintComp = 5;
 		
 		if (graphicTest) {
 			LoadingWindow gui = new LoadingWindow(typeheuristic, useBrutForce);
@@ -16,7 +18,7 @@ public class Main {
 		}
 		else {
 			CompareHeuristic c = new CompareHeuristic(0,5);
-			c.run(500);
+			c.run(10, SortedPrint, SortedPrintComp);
 		}
 	}
 }
