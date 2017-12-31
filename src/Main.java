@@ -5,7 +5,7 @@ import GraphicGame.LoadingWindow;
 public class Main {
 	
 	public static void main(String[] args) throws IOException{
-		boolean graphicTest = false;
+		boolean graphicTest = true;
 		boolean useBrutForce = false;
 		int typeheuristic = 5;
 		boolean SortedPrint = true;

@@ -75,7 +75,7 @@ public class GameWindow extends JFrame {
 	
 	public void movement(Move m, boolean last, char orientation){
 		pan.setMove(m);
-		int timeFreeze = 3;
+		int timeFreeze = 2;
 		int distance = m.distance;
 		int t = 0;
 		if (orientation == 'h'){
@@ -137,10 +137,6 @@ public class GameWindow extends JFrame {
 				if (!solved){
 					LinkedList<Move> sol = game.solve();
 					
-					int n = sol.size();
-					for (int i = 0; i < n; i++) {
-						
-					}
 					solution = sol;
 					solved = true;
 					bouton.setName("Solution");
