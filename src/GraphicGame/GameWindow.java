@@ -75,7 +75,7 @@ public class GameWindow extends JFrame {
 	
 	public void movement(Move m, boolean last, char orientation){
 		pan.setMove(m);
-		int timeFreeze = 5;
+		int timeFreeze = 3;
 		int distance = m.distance;
 		int t = 0;
 		if (orientation == 'h'){

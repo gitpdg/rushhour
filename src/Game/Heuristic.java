@@ -11,6 +11,7 @@ public class Heuristic {
 	
 	public int value(State state, Vehicle[] vehicles, int size) {
 		switch(typeHeuristic) {
+		case 5: return heuristic5(state, vehicles, size);
 		case 4: return heuristic4(state, vehicles, size);
 		case 3: return heuristic3(state, vehicles, size);
 		case 2: return heuristic2(state, vehicles, size);
@@ -100,5 +101,47 @@ public class Heuristic {
 				count+=1;
 		}
 		return count;
+	}
+	
+	public int heuristic5(State state, Vehicle[] vehicles, int size){
+		if (state.pos[0]-1 + vehicles[0].length  == size)
+			return 0;	
+		
+		int y = vehicles[0].fixedPos - 1;
+		float count = 1;
+		for (int x = state.pos[0] + vehicles[0].length - 1; x < size; x++){
+			int id1 = state.isOccupied[x][y];
+			if (id1 > 0){
+				count += 1;
+				Vehicle v = vehicles[id1-1];
+				int l = v.length;
+				float count_up = Float.MAX_VALUE;
+				int to_move_up = l - (state.pos[id1-1] - 1 - y);  
+				if (to_move_up <= state.pos[id1-1] - 1){
+					count_up = 0;
+					for (int y2 = state.pos[id1-1] - 2; y2 >= state.pos[id1-1] - 1 - to_move_up; y2--){
+						int id2 = state.isOccupied[x][y2];
+						if (id2 > 0){
+							count_up += 1./vehicles[id2-1].length;
+						}
+					}
+				}
+				
+				float count_down = Float.MAX_VALUE;
+				int to_move_down = state.pos[id1-1] - 1 - y + 1;
+				if (state.pos[id1-1] - 1 + v.length - 1 + to_move_down < size){
+					count_down = 0;
+					for (int y2 = state.pos[id1-1] - 1 + v.length - 1 + 1; y2 <= state.pos[id1-1] - 1 + v.length - 1 + to_move_down; y2++){
+						int id2 = state.isOccupied[x][y2];
+						if (id2 > 0){
+							count_down += 1./vehicles[id2-1].length;
+						}
+					}
+				}
+				
+				count += Float.min(count_down, count_up);
+			}
+		}
+		return ((int) count);
 	}
 }
