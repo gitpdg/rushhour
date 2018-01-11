@@ -17,24 +17,25 @@ import Game.Vehicle;
 
 
 public class GameWindow extends JFrame {
+	//Affiche l'intégralité de la fenêtre contenant la partie et les boutons.
 	static final long serialVersionUID = 3;
 	
 	String file_name;
 	Game game;
-	LinkedList<Move> solution;
-	boolean solved;
-	private GamePanel pan;
-	private JPanel container = new JPanel();
-	private Bouton bouton = new Bouton("Solve");
-	private Bouton newGame = new Bouton("New Game");
-	boolean reset;
+	LinkedList<Move> solution; //Solution de la partie
+	boolean solved; //Est-ce-que la solution de la partie a déjà été calculée ?
+	private GamePanel pan; //Panel contenant la grille de la partie
+	private JPanel container = new JPanel(); //Panel général contenant le Panel de la grille et les boutons
+	private Bouton bouton = new Bouton("Solve"); //Bouton Solve/Solution/Reset
+	private Bouton newGame = new Bouton("New Game"); //Bouton pour changer de partie
+	boolean reset; //Est-ce-que la bouton "bouton" est en position reset ?
 	private Thread t;
-	String path = "Games/";
-	int typeheuristic;
-	boolean brutForce;
+	String path = "Games/"; //Chemin d'accès où récupérer les parties
+	int typeheuristic; //Heuristic à utiliser pour la résolution
+	boolean brutForce; //Est-ce-qu'on utilise une heuristic ?
 	
 	public GameWindow(String file_name, String windowName, int type, boolean brutForce) throws IOException{
-		super(windowName);
+		//Initialise la fenêtre, avec les différents Panel, Bouton et leur agencement.
 		this.game = new Game(path + file_name, type, brutForce);
 		this.typeheuristic = type;
 		this.brutForce = brutForce;
@@ -74,8 +75,10 @@ public class GameWindow extends JFrame {
 	}
 	
 	public void movement(Move m, boolean last, char orientation){
-		pan.setMove(m);
-		int timeFreeze = 2;
+		//Affiche un mouvement en faisant avancer petit à petit la voiture concernée et en redessinant la grille à chaque fois.
+		//Si c'est le dernier mouvement (i.e. last = True), on avance de la longueur de la voiture en plus pour faire "sortir" la voiture de l'écran.
+		pan.setMove(m); 
+		int timeFreeze = 2; //Temps entre deux avancement, plus timeFreeze est petit plus la voiture va se déplacer vite
 		int distance = m.distance;
 		int t = 0;
 		if (orientation == 'h'){
@@ -115,9 +118,9 @@ public class GameWindow extends JFrame {
 	}
 	
 	class BoutonSolveListener implements ActionListener{
-		
+		//Implémente l'action du Bouton "bouton".
 		public void actionPerformed(ActionEvent arg0) {
-			if (reset) {
+			if (reset) { //Si il faut réinitialiser la partie
 				solution = null;
 				solved = false;
 				bouton.setName("Solve");
@@ -134,14 +137,14 @@ public class GameWindow extends JFrame {
 				reset = false;
 			}
 			else {
-				if (!solved){
+				if (!solved){ //Si on a pas encore calculé la solution, on la calcule
 					LinkedList<Move> sol = game.solve();
 					
 					solution = sol;
 					solved = true;
 					bouton.setName("Solution");
 				}
-				else {
+				else { //Si la solution est calculée, on l'affiche
 					if (solution != null) {
 						t = new Thread(new PlayAnimation());
 						t.start();
@@ -159,6 +162,7 @@ public class GameWindow extends JFrame {
 	}
 	
 	class NewGameListener implements ActionListener{
+		//Implémente le bouton "New Game" : on ferme la fenêtre actuelle et on réouvre la fenêtre de chargement de partie.
 		 public void actionPerformed(ActionEvent arg0){
 			
 			try {
@@ -174,7 +178,7 @@ public class GameWindow extends JFrame {
 	}
 	
 	class PlayAnimation implements Runnable{
-		
+		//Implémente l'affichage de la solution en déplaçant chacune leur tour chaque voiture de "solution".
 		public void run(){
 			while (!solution.isEmpty()){
 				Move m = solution.remove();
@@ -182,7 +186,7 @@ public class GameWindow extends JFrame {
 					movement(m, true, game.vehicles[m.id-1].orientation);
 				}
 				else {
-				movement(m, false, game.vehicles[m.id-1].orientation);
+					movement(m, false, game.vehicles[m.id-1].orientation);
 				}
 			}
 		}

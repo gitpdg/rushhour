@@ -138,9 +138,6 @@ public class Game {
 				s = q.poll();
 				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
 					seen.explore(s, this.nbrVehicles, this.size);
-					/*System.out.println(s.toString());
-					System.out.println();
-					System.out.println("distance" + s.distance + "heuristic" + s.heuristic);*/
 					int posFirstVehicle = s.pos[0];
 					int lengthFirstVehicle = (this.vehicles[0]).length;
 					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
@@ -149,7 +146,6 @@ public class Game {
 					else {
 						LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
 						for (Move m : moves){
-							//boolean add = false;
 							State s2 = new State(s, m, this.vehicles);
 							s2.setdistance(s.distance + 1);
 							int[] vu = seen.add(s2, m, this.nbrVehicles, this.size);
@@ -158,18 +154,15 @@ public class Game {
 								s2.setheuristic(heuristic, vehicles, size);
 								seen.changedHeuristic(s2, this.nbrVehicles, this.size);
 								q.add(s2);
-								//add = true;
 							}
 							else{
 								if (vu[1] == 0){
 									if (s.distance + 1 < vu[0]){
 										s2.heuristic = vu[2];
 										q.add(s2);
-										//add = true;
 									}
 								}
 							}
-							//System.out.println("Move :" + m.toString() + "seen" + vu[0] + "isExplored" + vu[1] + "distance" + s2.distance + "heuristic" + s2.heuristic + "add" + add);
 						}
 					}
 				}

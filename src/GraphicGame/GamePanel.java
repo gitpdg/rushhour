@@ -12,17 +12,17 @@ import Game.Move;
 import Game.Vehicle;
 
 public class GamePanel extends JPanel {
+	//Panel contenant l'affichage de la partie.
 	static final long serialVersionUID = 2;
 	
-	JPanel pan;
 	int size;
 	int nbrVehicles;
 	Vehicle[] vehicles;
 	int[] pos;
-	Move move;
-	int distancefaite;
-	Color[] colors = null;
-	boolean impossible = false;
+	Move move; //Mouvement en cours d'excécution
+	int distancefaite;	//Distance à ajouter au véhicule qu'on est en train de déplacer
+	Color[] colors = null;	//Tableau des couleurs de chaque véhicule
+	boolean impossible = false;	//Est ce que la partie est possible ?
 	
 	public GamePanel(int size, int nbrVehicles, Vehicle[] vehicles, int[] pos){
 		super();
@@ -37,14 +37,7 @@ public class GamePanel extends JPanel {
 	
 	
 	public void paintComponent(Graphics g){
-		if (impossible) {
-			/*try {
-				Image img = ImageIO.read(new File("impossible.jpg"));
-				g.drawImage(img, 0, 0, this.getWidth(), this.getHeight(), this);
-			}
-			catch (IOException e){
-				e.printStackTrace();
-			}*/
+		if (impossible) { //On affiche "impossible" si le jeu n'a pas de solution
 			paintBackGround(g);
 			Grille(g);
 			paintVehicles(g);
@@ -56,13 +49,13 @@ public class GamePanel extends JPanel {
 			g2d.drawString("IMPOSSIBLE", -this.getWidth()/8, 3*this.getHeight() / 4);
 		}
 		else {
-			if (this.move == null) {
+			if (this.move == null) { //Initialisation de la partie, on trace tous les véhicules à leur position initial
 				paintBackGround(g);
 				Grille(g);
 				if (this.colors == null) resetColor();
 				paintVehicles(g);
 			}
-			else {
+			else { //Dessine le mouvement d'un véhicule, on dessine chaque véhicule à sa position initial sauf celui qui bouge qu'on avance d'une distance distancefaite
 				paintBackGround(g);
 				Grille(g);
 				paintVehiclesMovement(g);
@@ -103,6 +96,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void paintBackGround(Graphics g){
+		//Peint le fond en gris
 		g.setColor(Color.LIGHT_GRAY);
 		int x1 = this.getWidth();
 		int y1 = this.getHeight();
@@ -110,6 +104,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void Grille(Graphics g){
+		//Affiche la grille, et notamment la porte de sortie. On suppose ici que la voiture rouge est horizontal pour afficher la porte de sortie.
 		g.setColor(Color.black);
 		int width = this.getWidth();
 		int height = this.getHeight();
@@ -141,6 +136,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public Color randomColor(Random rand){
+		//Renvoie une couleur aléatoire
 		float red = rand.nextFloat();
 		float green = rand.nextFloat();
 		float blue = rand.nextFloat();
@@ -149,6 +145,8 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void paintVehicle(Graphics g, Color c, Vehicle v, int position, boolean movement){
+		//Dessine un véhicule v sur la grille sous forme d'un rectangle de côtés arrondis et de couleur c.
+		//Si mouvement = True, on trace le véhicule à sa position + distancefaite.
 		g.setColor(c);
 		int w = this.getWidth();
 		int h = this.getHeight();
@@ -181,11 +179,12 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void resetColor(){
+		//Initialise le tableau colors donnant une couleur pour chaque véhicule.
 		Color[] colors = new Color[nbrVehicles];
 		Random rand = new Random();
 		for (int i = 0; i < this.nbrVehicles; i++){
 			if (i == 0){
-				colors[i] = Color.red;
+				colors[i] = Color.red; //On impose la couleur rouge au premier véhicule
 			}
 			else {
 				colors[i] = randomColor(rand);
@@ -195,6 +194,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void paintVehicles(Graphics g){
+		//Dessine l'ensemble des véhicules
 		for (int i = 0; i < this.nbrVehicles; i++){
 			Vehicle v = this.vehicles[i];
 			int position = this.pos[i];
@@ -203,6 +203,7 @@ public class GamePanel extends JPanel {
 	}
 	
 	public void paintVehiclesMovement(Graphics g) {
+		//Met à jour la grille de véhicule suite au mouvement d'un véhicule
 		for (int i = 0; i < nbrVehicles; i++) {
 			if (i == move.id - 1) {
 				paintVehicle(g, colors[i], vehicles[i], pos[i], true);

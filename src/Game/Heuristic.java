@@ -142,6 +142,6 @@ public class Heuristic {
 				count += Float.min(count_down, count_up);
 			}
 		}
-		return ((int) count);
+		return ((int) count + 1);
 	}
 }
