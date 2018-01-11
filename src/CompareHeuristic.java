@@ -10,7 +10,7 @@ import Game.Game;
 
 public class CompareHeuristic {
 
-	int min, max;
+	int min, max; //on compare toutes les heuristiques dont l'indice est entre min et max inclus
 	String path = "Games/";
 
 	public CompareHeuristic(int min, int max) {
@@ -19,7 +19,7 @@ public class CompareHeuristic {
 	}
 		
 	public void run(int iter) {
-		double[][] times = new double[max - min + 1][40];
+		double[][] times = new double[max - min + 1][40]; //40 : nombre de games dans la comparaision
 		String fileName;
 		Game game;
 		int[] result = new int[3];
