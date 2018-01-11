@@ -155,18 +155,15 @@ public class Game {
 								s2.setheuristic(heuristic, vehicles, size);
 								seen.changedHeuristic(s2, this.nbrVehicles, this.size);
 								q.add(s2);
-								//add = true;
 							}
 							else{
 								if (vu[1] == 0){
 									if (s.distance + 1 < vu[0]){
 										s2.heuristic = vu[2];
 										q.add(s2);
-										//add = true;
 									}
 								}
 							}
-							//System.out.println("Move :" + m.toString() + "seen" + vu[0] + "isExplored" + vu[1] + "distance" + s2.distance + "heuristic" + s2.heuristic + "add" + add);
 						}
 					}
 				}
