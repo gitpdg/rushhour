@@ -50,7 +50,7 @@ public class CompareHeuristic {
 		printHeuristics(times);
 	}
 	
-	public Color randomColor(Random rand){
+	public Color randomColor(Random rand){ //renvoie une couleur aléatoire
 		float red = rand.nextFloat();
 		float green = rand.nextFloat();
 		float blue = rand.nextFloat();
@@ -59,6 +59,7 @@ public class CompareHeuristic {
 	}
 	
 	public Color chooseColor(Color[] colors, int i){
+		//Renvoie une couleur aléatoire qui n'est pas déjà contenue dans colors.
 		boolean find = false;
 		Random rand = new Random();
 		Color c = null;
@@ -74,6 +75,7 @@ public class CompareHeuristic {
 	}
 	
 	public void printHeuristics(double[][] times){
+		//Affiche le temps mis par chaque heuristiques en fonction de la partie, en utilisant Plot2DPanel.
 		System.out.println("printing plot...");
 		Plot2DPanel plot = new Plot2DPanel();
 		int n = times.length;

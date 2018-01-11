@@ -138,9 +138,6 @@ public class Game {
 				s = q.poll();
 				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
 					seen.explore(s, this.nbrVehicles, this.size);
-					/*System.out.println(s.toString());
-					System.out.println();
-					System.out.println("distance" + s.distance + "heuristic" + s.heuristic);*/
 					int posFirstVehicle = s.pos[0];
 					int lengthFirstVehicle = (this.vehicles[0]).length;
 					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
