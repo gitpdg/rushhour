@@ -3,7 +3,7 @@ package Game;
 import java.util.Comparator;
 
 public class ComparatorState implements Comparator<State> {
-	
+	//Comparateur sur des états : les états s1 et s2 sont comparés par la valeur de leur heuristique + leur distance
 	public int compare(State s1, State s2){
 		int h1 = s1.heuristic;
 		int d1 = s1.distance;

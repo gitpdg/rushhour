@@ -1,7 +1,7 @@
 package Game;
 
 public class Move {
-	
+	//Classe représentant un mouvement par, l'id du véhicule se déplaçant et la distance à faire.
 	public int id;
 	public int distance;
 	

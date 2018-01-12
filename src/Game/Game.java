@@ -146,7 +146,6 @@ public class Game {
 					else {
 						LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size);
 						for (Move m : moves){
-							//boolean add = false;
 							State s2 = new State(s, m, this.vehicles);
 							s2.setdistance(s.distance + 1);
 							int[] vu = seen.add(s2, m, this.nbrVehicles, this.size);

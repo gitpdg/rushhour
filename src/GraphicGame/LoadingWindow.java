@@ -18,11 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class LoadingWindow extends JFrame {
+	//Affiche la fenêtre de lancement d'une partie.
 	static final long serialVersionUID = 4;
 	
 	JPanel container = new JPanel();
 	Bouton start;
-	JComboBox<String> choices = new JComboBox<String>();
+	JComboBox<String> choices = new JComboBox<String>(); //Menu déroulant pour choisir la partie
 	int typeheuristic;
 	boolean brutForce;
 	
@@ -40,7 +41,7 @@ public class LoadingWindow extends JFrame {
 		pan.setLayout(new FlowLayout());
 		choices.setPreferredSize(new Dimension(100, 23));
 		File folder = new File("Games/");
-		String[] list = folder.list(new FileNameFilter());
+		String[] list = folder.list(new FileNameFilter()); //Récupère tous les fichiers du dossier "Games" dont le nom correspond aux critères de FileNameFilter.
 		choices.addItem("...");
 		for (int i = 0; i < list.length; i++){
 			int l = list[i].length();
@@ -74,7 +75,7 @@ public class LoadingWindow extends JFrame {
 	
 	public class ItemState implements ItemListener{
 		public void itemStateChanged(ItemEvent e) {
-			if (e.getItem() != "...") {
+			if (e.getItem() != "...") { //Quand on a choisit une partie différentes de "..." on peut appuyer sur start.
 				start.setEnabled(true);
 			}
 			else {
@@ -84,7 +85,7 @@ public class LoadingWindow extends JFrame {
 	}
 	
 	public class StartButtonListener implements ActionListener {
-		
+		//Implémentation de l'action réalisée par le bouton "start" : On ferme la fenêtre actuelle et on lance la fenêtre de la partie sélectionnée dans le menu déroulant.
 		public void actionPerformed(ActionEvent arg0) {
 			String str = (String) choices.getSelectedItem();
 			System.out.println("");
