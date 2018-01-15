@@ -242,9 +242,9 @@ public class Game {
 			
 
 			while ((!q.isEmpty()) && !solved) {
-				numberSeenStates += 1;
 				s = q.poll();
 				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
+					numberSeenStates += 1;
 					int posFirstVehicle = s.pos[0];
 					int lengthFirstVehicle = (this.vehicles[0]).length;
 					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {

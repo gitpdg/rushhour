@@ -21,7 +21,6 @@ public class Heuristic {
 	}
 	
 	
-	
 	public int heuristic0(){
 		//constant zero
 		return 0;
@@ -39,7 +38,7 @@ public class Heuristic {
 	}
 	
 	public int heuristic2(State state, Vehicle[] vehicles, int size){
-		//return 0 si on est à la solution, et sinon 1+nombre de véhicule devant la voiture rouge, on ajoute ensuite un si au moins un de ces véhicules ne peut pas s'écarter en un seul mouvement.
+		//return 0 si on est à la solution, et sinon 1+nombre de véhicule devant la voiture rouge, on ajoute ensuite 1 si au moins un de ces véhicules ne peut pas s'écarter en un seul mouvement.
 		if (state.pos[0]-1 + vehicles[0].length  == size)
 			return 0;
 
