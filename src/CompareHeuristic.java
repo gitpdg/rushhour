@@ -10,7 +10,7 @@ import Game.Game;
 
 public class CompareHeuristic {
 
-	int min, max;
+	int min, max; //on compare toutes les heuristiques dont l'indice est entre min et max inclus
 	String path = "Games/";
 
 	public CompareHeuristic(int min, int max) {
@@ -18,12 +18,21 @@ public class CompareHeuristic {
 		this.max = max;
 	}
 		
-	public void run(int iter, boolean sorted, int sorte_comp) {
-		double[][] times = new double[max - min + 1][40];
+
+	public void run(int iter, boolean sorted, int sorte_comp, boolean print, boolean timeGraph) {
+		//retourne un graphique du temps d'exécutions de diffférentes heuristiques pour les 40 parties.
+		//si sorted=true, il trie les parties par temps d'exécution pour l'heuristique sorte_comp croissant
+		//si print=true, il affiche ses résultats au fur et à mesure
+		double[][] times = new double[max - min + 1][40]; //Stocke les temps moyens en fonctions de l'heuristique et de la partie. 40 : nombre de games dans la comparaision
+		double[][] visited = new double[max - min + 1][40]; //Stocke le nombre d'états vus en fonctions de l'heuristique et de la partie. 40 : nombre de games dans la comparaision
 		String fileName;
 		Game game;
 		int[] result = new int[3];
 		int time;
+		
+		if (!timeGraph)
+			iter=1; //rien ne sert de faire plusieurs itérations, on s'intéresse aux états visités et pas au temps
+		
 		for (int i=1; i<=40; i++) {
 			System.out.println("");
 			for (int type =min; type<=max; type++) {
@@ -32,8 +41,8 @@ public class CompareHeuristic {
 				}
 				else {
 					fileName = "GameP"+i;
-				}					
-				time = 0;
+				}
+				time = 0; //stocke le temps cumulé les itérations
 				for (int j=0; j<iter;j++) {
 					try {
 						game = new Game(path + fileName + ".txt", type, false);
@@ -43,19 +52,39 @@ public class CompareHeuristic {
 						e.printStackTrace();
 					}
 				}
-				System.out.println(fileName+"   heuristic "+type+"   average time : "+(time/iter)+"ms   "+result[1]+" visited states   "+result[2]+" moves");
+				if (print)
+					System.out.println(fileName+"   heuristic "+type+"   average time : "+(time/iter)+"ms   "+result[1]+" visited states   "+result[2]+" moves");
 				times[type-min][i-1] = time/iter;
+				visited[type-min][i-1] = result[1];
 			}
 		}
+		/*
 		if (sorted){
-			printHeuristicsSorted(times, sorte_comp);
+			if (timeGraph)
+				printHeuristicsSorted(times, sorte_comp);
+			else
+				printHeuristicsSorted(visited, sorte_comp);
 		}
 		else{
-			printHeuristics(times);
+			if (timeGraph)
+				printHeuristics(times);
+			else
+				printHeuristics(visited);
+		}
+		*/
+		
+		for (int type=min; type<=max;type+=1) {
+			double sumTime = 0;
+			double sumVisitedStates = 0;
+			for (int i=0;i<times[0].length;i++) {
+				sumTime += times[type][i];
+				sumVisitedStates += visited[type][i];
+			}
+			System.out.println("Heuristic "+type+"   speed "+sumTime/sumVisitedStates);
 		}
 	}
 	
-	public Color randomColor(Random rand){
+	public Color randomColor(Random rand){ //renvoie une couleur aléatoire
 		float red = rand.nextFloat();
 		float green = rand.nextFloat();
 		float blue = rand.nextFloat();
@@ -64,6 +93,7 @@ public class CompareHeuristic {
 	}
 	
 	public Color chooseColor(Color[] colors, int i){
+		//Renvoie une couleur aléatoire qui n'est pas déjà contenue dans colors.
 		boolean find = false;
 		Random rand = new Random();
 		Color c = null;
@@ -78,7 +108,8 @@ public class CompareHeuristic {
 		return c;
 	}
 	
-	public void sorteHeuristics(double[][] times, int comp){
+
+		public void sorteHeuristics(double[][] times, int comp){
 		int n = times.length;
 		int m = times[0].length;
 		for (int i = 1; i < m; i++){
@@ -137,7 +168,9 @@ public class CompareHeuristic {
 		window.setVisible(true);
 	}
 	
+
 	public void printHeuristics(double[][] times){
+		//Affiche le temps mis par chaque heuristiques en fonction de la partie, en utilisant Plot2DPanel.
 		System.out.println("printing plot...");
 		Plot2DPanel plot = new Plot2DPanel();
 		int n = times.length;

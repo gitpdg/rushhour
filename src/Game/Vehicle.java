@@ -1,7 +1,7 @@
 package Game;
 
 public class Vehicle {
-	//Classe représentant un véhicule par son id, sa longueur, son orientation et sa position restante fixe.
+	//Classe représentant un véhicule par son id, sa longueur, son orientation et sa position restant fixe.
 	public int id;
 	public int length;
 	public char orientation;

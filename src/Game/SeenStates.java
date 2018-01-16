@@ -1,12 +1,13 @@
 package Game;
 
 public class SeenStates {
-	
+	//Classe de type arbre permettant de savoir si un état est déjà vu ou pas.
+	//Cet arbre contient aussi le dernier mouvement fait pour arriver dans un état déjà vu.
 	Move lastmove;
-	Integer isExplored;
+	Integer isExplored; //Indique si l'état a déjà été exporé afin de savoir si l'heuristique associée a déjà été calculée ou non.
 	SeenStates[] children;
-	Integer distance;
-	Integer heuristic;
+	Integer distance; //Donne la distance, qu'on connait pour l'instant, de cet état à l'état initialement
+	Integer heuristic; //Donne l'heuristique associée à cet état si il a déjà été exploré.
 	boolean brutForce;
 	
 	public SeenStates(boolean brutForce){
@@ -19,6 +20,8 @@ public class SeenStates {
 	}
 	
 	public int[] add(State e, Move lastmove, int nbrVehicles, int size){
+		//Indique si un état a déjà été vu ou non, et si ce n'est pas le cas le marque comme vu et enregistre
+		//le dernier mouvement fait pour arriver dans cet état.
 		int[] pos = e.pos;
 		SeenStates tree = this;
 		int[] res = new int[3];
@@ -33,7 +36,7 @@ public class SeenStates {
 			}	
 			tree = child[pos[i]-1];			
 		}
-		if (tree.lastmove == null) {
+		if (tree.lastmove == null) { //Si on a pas encore vu cet état
 			tree.lastmove = lastmove;
 			if (!this.brutForce){
 				tree.distance = e.distance;
@@ -65,6 +68,7 @@ public class SeenStates {
 	}
 	
 	public int isExplored(State e, int nbrVehicles, int size){
+		//Indique si un état donné a déjà été exploré ou non
 		int[] pos = e.pos;
 		SeenStates tree = this;
 		for (int i = 0; i < nbrVehicles; i++) {
@@ -82,6 +86,7 @@ public class SeenStates {
 	}
 	
 	public void explore(State e, int nbrVehicles, int size){
+		//Marque un état comme exploré.
 		int[] pos = e.pos;
 		SeenStates tree = this;
 		for (int i = 0; i < nbrVehicles; i++) {
@@ -99,6 +104,7 @@ public class SeenStates {
 	}
 	
 	public void changedHeuristic(State e, int nbrVehicles, int size){
+		//Calcule l'heuristique associée à un état
 		int[] pos = e.pos;
 		SeenStates tree = this;
 		for (int i = 0; i < nbrVehicles; i++) {
