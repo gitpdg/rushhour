@@ -26,12 +26,12 @@ public class Game {
 		String[] line_split;
 		Vehicle[] pos = new Vehicle[nbrVehicles];
 		int[] posInit = new int[nbrVehicles];
-		int[][] t = new int[size][size];
+		int[][] isOccupied = new int[size][size]; // isOccupied contient l'id de la voiture qui occupe la case, ou 0 si la case est vide.
 		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				t[i][j] = 0;
-			}
+			for (int j = 0; j < size; j++)
+				isOccupied[i][j] = 0;
 		}
+		
 		for (int k = 0; k < nbrVehicles; k++) {
 			line = br.readLine();
 			line_split = line.split(" ");
@@ -46,18 +46,15 @@ public class Game {
 				pos[k] = v;
 				posInit[k] = x;
 				if ((x-1) + (length - 1) >= size) {
-					System.out.println("Too big");
+					System.out.println("Car number "+id+" is too big");
 				}
 				else {
 					for (int l = x - 1; l < x - 1 + length; l++) {
-						if (t[l][y-1] != 0) {
-							System.out.println("None valid input");
-						}
-						else {
-							t[l][y-1] = v.id;
-						}
+						if (isOccupied[l][y-1] != 0)
+							System.out.println("Car number "+id+" and car number "+ isOccupied[l][y-1]+" overlap");
+						else
+							isOccupied[l][y-1] = v.id;
 					}
-
 				}
 			}
 
@@ -66,16 +63,14 @@ public class Game {
 				pos[k] = v;
 				posInit[k] = y;
 				if ((y-1) + (length - 1) >= size) {
-					System.out.println("Too big");
+					System.out.println("Car number "+id+" is too big");
 				}
 				else {
 					for (int l = y - 1; l < y - 1 + length; l++) {
-						if (t[x-1][l] != 0) {
-							System.out.println("None valid input");
-						}
-						else {
-							t[x-1][l] = v.id;
-						}
+						if (isOccupied[x-1][l] != 0)
+							System.out.println("Car number "+id+" and car number "+ isOccupied[x-1][l-1]+" overlap");
+						else
+							isOccupied[x-1][l] = v.id;
 					}
 
 				}
@@ -87,7 +82,7 @@ public class Game {
 		this.size = size;
 		this.nbrVehicles = nbrVehicles;
 		this.vehicles = pos;
-		this.initialState = new State(posInit, t);
+		this.initialState = new State(posInit, isOccupied);
 		this.heuristic = new Heuristic(typeheuristic);
 		this.brutForce = brutForce;
 	}
