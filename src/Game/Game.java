@@ -99,7 +99,7 @@ public class Game {
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
 		State s = this.initialState;
-		SeenStates seen = new SeenStates();
+		SeenStates seen = new SeenStates(this.brutForce);
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
 
@@ -206,7 +206,7 @@ public class Game {
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
 		State s = this.initialState;
-		SeenStates seen = new SeenStates();
+		SeenStates seen = new SeenStates(this.brutForce);
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
 
