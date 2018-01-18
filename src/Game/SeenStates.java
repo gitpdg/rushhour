@@ -8,7 +8,7 @@ public class SeenStates {
 	SeenStates[] children;
 	Integer distance; //Donne la distance, qu'on connait pour l'instant, de cet état à l'état initialement
 	Integer heuristic; //Donne l'heuristique associée à cet état si il a déjà été exploré.
-	boolean brutForce;
+	boolean bruteForce;
 	
 	public SeenStates(boolean brutForce){
 		this.lastmove = null;
@@ -16,7 +16,7 @@ public class SeenStates {
 		this.distance = null;
 		this.isExplored = 0;
 		this.heuristic = null;
-		this.brutForce = brutForce;
+		this.bruteForce = brutForce;
 	}
 	
 	public int[] add(State e, Move lastmove, int nbrVehicles, int size){
@@ -35,7 +35,7 @@ public class SeenStates {
 			if (child == null) {
 				child = new SeenStates[size];
 				for (int j = 0; j < size; j++){
-					child[j] = new SeenStates(this.brutForce);
+					child[j] = new SeenStates(this.bruteForce);
 				}
 				tree.children = child;
 			}	
@@ -43,7 +43,7 @@ public class SeenStates {
 		}
 		if (tree.lastmove == null) { //Si on a pas encore vu cet état
 			tree.lastmove = lastmove; //On enregistre le dernier mouvement fait
-			if (!this.brutForce){
+			if (!this.bruteForce){
 				tree.distance = e.distance; //On enregistre la distance actuelle et l'heuristique de cet état
 				tree.heuristic = e.heuristic;
 				res[0] = -1; //On indique qu'on n'avait pas encore vu cet état
@@ -56,7 +56,7 @@ public class SeenStates {
 		}
 		else {	//Si on a déjà vu l'état
 			
-			if (!this.brutForce){
+			if (!this.bruteForce){
 				res[0] = tree.distance; //On renvoie la distance actuelle à l'état initial
 				res[1] = tree.isExplored; //On indique si l'état a déjà été exploré ou non
 				res[2] = tree.heuristic; //On renvoie l'heuristique pour ne pas avoir à la calculer deux fois
@@ -81,7 +81,7 @@ public class SeenStates {
 			if (child == null) {
 				child = new SeenStates[size];
 				for (int j = 0; j < size; j++){
-					child[j] = new SeenStates(this.brutForce);
+					child[j] = new SeenStates(this.bruteForce);
 				}
 				tree.children = child;
 			}	
@@ -99,7 +99,7 @@ public class SeenStates {
 			if (child == null) {
 				child = new SeenStates[size];
 				for (int j = 0; j < size; j++){
-					child[j] = new SeenStates(this.brutForce);
+					child[j] = new SeenStates(this.bruteForce);
 				}
 				tree.children = child;
 			}	
@@ -117,7 +117,7 @@ public class SeenStates {
 			if (child == null) {
 				child = new SeenStates[size];
 				for (int j = 0; j < size; j++){
-					child[j] = new SeenStates(this.brutForce);
+					child[j] = new SeenStates(this.bruteForce);
 				}
 				tree.children = child;
 			}	

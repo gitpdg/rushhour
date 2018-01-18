@@ -15,7 +15,7 @@ public class Game {
 	public Vehicle[] vehicles; //Tableau d'informations sur chaque véhicule, informations qui ne vont pas changer au cours de la partie
 	public State initialState; //Représente l'état initial
 	Heuristic heuristic; //Donne l'heuristique utilisée si il y a lieu
-	boolean brutForce; //Indique si on souhaite résoudre avec une heuristique ou non
+	boolean bruteForce; //Indique si on souhaite résoudre avec une heuristique ou non
 
 
 	public Game(String file_name, int typeheuristic, boolean brutForce) throws IOException {
@@ -86,7 +86,7 @@ public class Game {
 		this.vehicles = pos;
 		this.initialState = new State(posInit, isOccupied);
 		this.heuristic = new Heuristic(typeheuristic);
-		this.brutForce = brutForce;
+		this.bruteForce = brutForce;
 	}
 
 
@@ -96,13 +96,13 @@ public class Game {
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0; //Pour connaitre le nombre d'états visités
 		State s = this.initialState;
-		SeenStates seen = new SeenStates(this.brutForce);
+		SeenStates seen = new SeenStates(this.bruteForce);
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size); //On ajoute l'état initial comme état vu
 		boolean solved = false;
 		
 		//Si on utilise la méthode brute force on va utiliser un file pour faire un parcours en largeur de l'arbre des différents états possibles
 		//De cette manière si on arrive sur un état déjà vu c'est qu'on a déjà un chemin plus court menant à lui, on peut donc l'ignorer.
-		if (this.brutForce) {
+		if (this.bruteForce) {
 			Queue<State> q = new ArrayDeque<State>();
 			q.add(s);
 
@@ -209,11 +209,11 @@ public class Game {
 		LinkedList<Move> res = new LinkedList<Move>();
 		int numberSeenStates = 0;
 		State s = this.initialState;
-		SeenStates seen = new SeenStates(this.brutForce);
+		SeenStates seen = new SeenStates(this.bruteForce);
 		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
 		boolean solved = false;
 
-		if (this.brutForce) {
+		if (this.bruteForce) {
 			Queue<State> q = new ArrayDeque<State>();
 			q.add(s);
 
