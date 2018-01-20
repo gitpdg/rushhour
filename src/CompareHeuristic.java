@@ -58,20 +58,20 @@ public class CompareHeuristic {
 				visited[type-min][i-1] = result[1];
 			}
 		}
-		/*
+		
 		if (sorted){
 			if (timeGraph)
-				printHeuristicsSorted(times, sorte_comp);
+				printHeuristicsSorted(times, sorte_comp, "Comparaison heuristics : temps en fonction des games");
 			else
-				printHeuristicsSorted(visited, sorte_comp);
+				printHeuristicsSorted(visited, sorte_comp, "Comparaison heuristics : nombre d'états visités en fonction des games");
 		}
 		else{
 			if (timeGraph)
-				printHeuristics(times);
+				printHeuristics(times, "Comparaison heuristics : temps en fonction des games");
 			else
-				printHeuristics(visited);
+				printHeuristics(visited, "Comparaison heuristics : nombre d'états visités en fonction des games");
 		}
-		*/
+		
 		
 		for (int type=min; type<=max;type+=1) {
 			double sumTime = 0;
@@ -131,7 +131,7 @@ public class CompareHeuristic {
 		}
 	}
 	
-	public void printHeuristicsSorted(double[][] times, int comp){
+	public void printHeuristicsSorted(double[][] times, int comp, String title){
 		System.out.println("printing plot...");
 		Plot2DPanel plot = new Plot2DPanel();
 		sorteHeuristics(times, comp);
@@ -162,14 +162,14 @@ public class CompareHeuristic {
 			plot.addLinePlot(name, c, x, y);
 		}
 		
-		JFrame window = new JFrame("Comparaison heuristics trié par heuristic0");
+		JFrame window = new JFrame(title);
 		window.setSize(2000,1000);
 		window.setContentPane(plot);
 		window.setVisible(true);
 	}
 	
 
-	public void printHeuristics(double[][] times){
+	public void printHeuristics(double[][] times, String title){
 		//Affiche le temps mis par chaque heuristiques en fonction de la partie, en utilisant Plot2DPanel.
 		System.out.println("printing plot...");
 		Plot2DPanel plot = new Plot2DPanel();
@@ -199,7 +199,7 @@ public class CompareHeuristic {
 			plot.addLinePlot(name, c, x, y);
 		}
 		
-		JFrame window = new JFrame("Comparaison heuristics : temps en fonction des games");
+		JFrame window = new JFrame(title);
 		window.setSize(2000,1000);
 		window.setContentPane(plot);
 		window.setVisible(true);
