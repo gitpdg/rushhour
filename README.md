@@ -1,4 +1,16 @@
-Notre code s'organise en trois package : 
+Tout d'abord nous utilisons dans notre code une librairie extérieure qu'il faut donc importer pour pouvoir utiliser
+code. Cette librairie se trouve dans le dossier lib.
+Sous Eclipse il suffit de faire clic droit sur le dossier du projet, d'aller dans Build Path puis dans Configure
+Build Path et ensuite d'ajouter les deux fichiers présents dans le dossier lib via le bouton Add External JARs.
+
+Ensuite, nous avons codé l'interface graphique de manière à ce que celle-ci récupère tous les fichiers textes,
+commençant par "game", présents dans le dossier "Games" qui doit être situé à la racine du projet.
+Vous trouverez pour l'instant dans ce dossier plusieurs exemples de parties que nous avons utilisés pour nos tests.
+Pour pouvoir résoudre une autre partie et l'afficher via l'interface graphique il faut donc ajouter cette
+partie dans le dossier "Games" et lui donner un nom commençant par "game".
+
+Vous pouvez maintenant commencer à utiliser notre code.
+Celui-ci s'organise en trois packages : 
 	- le default package contenant le main et une classe permettant de comparer les heuristiques,
 	- le package game contenant toutes les classes permettant de résoudre une partie de rush hour,
 	- le package GraphicGame conteant toutes les classes permettant de visualiser une partie.
