@@ -88,6 +88,34 @@ public class Game {
 		this.heuristic = new Heuristic(typeheuristic);
 		this.bruteForce = brutForce;
 	}
+	
+	public double[] compte_etats(int n){
+		double[] res = new double[n+1];
+		for (int i = 0; i < n + 1; i++){
+			res[i] = 0;
+		}
+		State s = this.initialState;
+		int d = 0;
+		SeenStates seen = new SeenStates(this.bruteForce);
+		seen.add(s, new Move(1, 0), this.nbrVehicles, this.size);
+		Queue<Couple> q = new ArrayDeque<Couple>();
+		q.add(new Couple(d, s));
+		while (!q.isEmpty()) {
+			Couple c = q.remove();
+			s = c.etat;
+			d = c.distance;
+			res[d] += 1;
+			LinkedList<Move> moves = s.possibleMoves(this.vehicles, this.size); //On regarde tous les mouvements possibles
+			
+			for (Move m : moves){
+				State s2 = new State(s, m, this.vehicles);
+				if (seen.add(s2, m, this.nbrVehicles, this.size)[0] == -1){ //Si l'état s2 n'est pas déjà vu on le marque comme vu (ce qui se fait dans add)
+					q.add(new Couple(d+1, s2)); //Puis on l'ajoute à la file des états à visiter
+				}
+			}
+		}
+		return res;
+	}
 
 
 	public LinkedList<Move> solve() {
@@ -136,9 +164,10 @@ public class Game {
 			q.add(s);
 			
 			while ((!q.isEmpty()) && !solved) {
-				numberSeenStates += 1;
+				
 				s = q.poll(); //On récupère l'état le plus proche au sens distance + heuristique. Sa distance actuelle à l'état initial est alors sa distance minimale (cf preuve correction).
 				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){ //Si l'état a déjà été exploré c'est qu'on a déjà trouvé sa distance minimale a l'état initial. On ne regarde donc que des états non explorés.
+					numberSeenStates += 1;
 					seen.explore(s, this.nbrVehicles, this.size); //On marque cet état comme exploré puisqu'on a trouvé sa distance à l'état initial.
 					//On teste si on est arrivé à la fin de la partie
 					int posFirstVehicle = s.pos[0];
@@ -203,7 +232,8 @@ public class Game {
 	}
 
 	public int[] solveStat() {
-		//returns [execution time, number of visited states, length of solution]
+		//Même code que la méthode solve mais cette fois on mémorise et on renvoie
+		//[temps d'execution, nombre d'états visités, longueur de la solution]
 		long startingTime = System.currentTimeMillis();
 
 		LinkedList<Move> res = new LinkedList<Move>();
@@ -245,9 +275,10 @@ public class Game {
 			
 
 			while ((!q.isEmpty()) && !solved) {
-				numberSeenStates += 1;
+				
 				s = q.poll();
 				if (seen.isExplored(s, this.nbrVehicles, this.size) == 0){
+					numberSeenStates += 1;
 					int posFirstVehicle = s.pos[0];
 					int lengthFirstVehicle = (this.vehicles[0]).length;
 					if (posFirstVehicle + lengthFirstVehicle - 1 == this.size) {
