@@ -29,11 +29,12 @@ public class Main {
 		
 		
 		if (print_etat){
-			Game g = new Game("Games/game08.txt", typeHeuristic, useBruteForce);
+			Game g = new Game("Games/gameP02.txt", typeHeuristic, useBruteForce);
 			int d = (g.solve()).size();
-			double[] res = g.compte_etats(2*d);
-			double[] x = new double[2*d+1];
-			for (int i = 0; i <2*d+1; i++){
+			int n = Integer.max(50, 2*d);
+			double[] res = g.compte_etats(n);
+			double[] x = new double[n+1];
+			for (int i = 0; i <n+1; i++){
 				x[i] = i;
 			}
 			Plot2DPanel plot = new Plot2DPanel();
