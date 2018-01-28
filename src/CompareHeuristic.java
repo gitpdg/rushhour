@@ -117,6 +117,11 @@ public class CompareHeuristic {
 			double value = times[comp][i];
 			while ((j - 1 >= 0) && (times[comp][j-1] > value)){
 				times[comp][j] = times[comp][j-1];
+				for (int k = 0; k < n; k++){ //Echange les temps des autres heuristics
+					if (k != comp){
+						times[k][j] = times[k][j-1];
+					}
+				}
 				j -= 1;
 			}
 			times[comp][j] = value;
