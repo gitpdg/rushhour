@@ -114,24 +114,19 @@ public class CompareHeuristic {
 		int m = times[0].length;
 		for (int i = 1; i < m; i++){
 			int j = i;
-			double value = times[comp][i];
-			while ((j - 1 >= 0) && (times[comp][j-1] > value)){
-				times[comp][j] = times[comp][j-1];
-				for (int k = 0; k < n; k++){ //Echange les temps des autres heuristics
-					if (k != comp){
+			double[] value = new double[n];
+			for (int l = 0; l < n; l++){
+				value[l] = times[l][i];
+			}
+			while ((j - 1 >= 0) && (times[comp][j-1] > value[comp])){
+				//times[comp][j] = times[comp][j-1];
+				for (int k = 0; k < n; k++){
 						times[k][j] = times[k][j-1];
-					}
 				}
 				j -= 1;
 			}
-			times[comp][j] = value;
-			//Echange les temps des autres heuristics
 			for (int k = 0; k < n; k++){
-				if (k != comp){
-					double aux = times[k][i];
-					times[k][i] = times[k][j];
-					times[k][j] = aux;		
-				}
+				times[k][j] = value[k];
 			}
 		}
 	}

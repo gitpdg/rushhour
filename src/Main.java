@@ -21,7 +21,7 @@ public class Main {
 		int typeHeuristic = 5; //si on utilise une heuristique, on utilise celle-là
 		
 		//paramètres pour CompareHeuristics
-		boolean SortedPrint = true; //si true, trie les abscisses. Sinon, garde l'ordre 1 à 40 des games.
+		boolean SortedPrint = false; //si true, trie les abscisses. Sinon, garde l'ordre 1 à 40 des games.
 		int SortedPrintComp = 0; //si on trie, on trie par rapports aux résulats de cette heuristique
 		boolean print = true; //si true, affiche les résultats au fur et à mesure
 		boolean timeGraph = false; //si true, fait le graphe du temps d'exécution. Sinon, fait le graphe du nombre d'états visités.
